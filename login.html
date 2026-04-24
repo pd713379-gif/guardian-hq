@@ -103,14 +103,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     btn.disabled = false;
     const msgs = {
       'auth/invalid-credential':     'E-mail of wachtwoord onjuist.',
-      'auth/user-not-found':         'Geen account gevonden.',
+      'auth/user-not-found':         'E-mail of wachtwoord onjuist.',
       'auth/wrong-password':         'Wachtwoord onjuist.',
       'auth/too-many-requests':      'Te veel pogingen. Probeer later opnieuw.',
       'auth/network-request-failed': 'Geen internetverbinding.',
       'auth/invalid-email':          'Ongeldig e-mailadres.',
     };
     errDiv.style.display = 'flex';
-    errMsg.textContent = msgs[err.code] || 'Fout: ' + err.message;
+    errMsg.textContent = msgs[err.code] || err.code + ': ' + err.message;
   }
 });
 
