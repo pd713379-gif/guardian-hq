@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact – GuardianHQ</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-a">Home</a>
+      <a href="profile.html" class="nav-a">Profiel</a>
+      <a href="weapons.html" class="nav-a">Wapens</a>
+      <a href="seasonal.html" class="nav-a">Seizoen</a>
+      <a href="raids.html" class="nav-a">Raids</a>
+      <a href="contact.html" class="nav-a active">Contact</a>
+    </div>
+    <div class="nav-btns" id="nav-btns"></div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="ph-in">
+    <div class="ph-lbl">Neem contact op</div>
+    <div class="ph-title">📡 Contact</div>
+    <div class="ph-desc">Heb je vragen, feedback of een bug gevonden? We horen graag van je.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-in">
+    <div class="cont-grid">
+      <div class="info-card">
+        <div style="margin-bottom:26px">
+          <div style="font-family:var(--fd);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Contact Informatie</div>
+          <div style="font-size:13px;color:var(--t2)">We zijn bereikbaar via onderstaande kanalen. We reageren doorgaans binnen 24 uur.</div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-ico">📧</div>
+          <div><div class="ci-ttl">E-mail</div><div class="ci-val">support@guardianhq.vercel.app</div></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-ico">🌐</div>
+          <div><div class="ci-ttl">Website</div><div class="ci-val">https://guardianhq.vercel.app</div></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-ico">⌥</div>
+          <div><div class="ci-ttl">GitHub</div><div class="ci-val">github.com/guardianhq</div></div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-ico">⚡</div>
+          <div><div class="ci-ttl">API Status</div><div class="ci-val"><span style="color:var(--green)">● Online</span> — Bungie API verbonden</div></div>
+        </div>
+        <div style="margin-top:24px;padding:16px;background:rgba(79,195,247,.05);border:1px solid rgba(79,195,247,.15);border-radius:8px">
+          <div style="font-family:var(--fu);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:6px">⚠️ Disclaimer</div>
+          <div style="font-size:12px;color:var(--t3);line-height:1.6">GuardianHQ is een fan-project en is niet gelieerd aan Bungie, Inc. Destiny 2 en alle bijbehorende intellectuele eigendomsrechten zijn eigendom van Bungie, Inc.</div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div style="font-family:var(--fd);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Stuur een Bericht</div>
+        <div style="font-size:13px;color:var(--t2);margin-bottom:22px">Vul het formulier in en we nemen zo snel mogelijk contact op.</div>
+        <form id="contact-form">
+          <div class="frow">
+            <div class="fg">
+              <label class="flbl" for="c-name">Naam</label>
+              <input class="finp" id="c-name" type="text" placeholder="Guardian Naam" required>
+            </div>
+            <div class="fg">
+              <label class="flbl" for="c-email">E-mail</label>
+              <input class="finp" id="c-email" type="email" placeholder="guardian@example.com" required>
+            </div>
+          </div>
+          <div class="fg">
+            <label class="flbl" for="c-subject">Onderwerp</label>
+            <input class="finp" id="c-subject" type="text" placeholder="Bijv. Bug report, Feedback, Vraag..." required>
+          </div>
+          <div class="fg">
+            <label class="flbl" for="c-msg">Bericht</label>
+            <textarea class="ftarea" id="c-msg" placeholder="Schrijf je bericht hier..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-p btn-full">📤 Verstuur Bericht</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <div class="foot-grid">
+      <div>
+        <a href="index.html" class="foot-logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
+        <p class="foot-desc">De meest complete Destiny 2 stats tracker. Powered by de officiële Bungie API.</p>
+        <p class="foot-disc">GuardianHQ is geen officieel Bungie-product.</p>
+      </div>
+      <div>
+        <div class="foot-col-t">Navigatie</div>
+        <ul class="foot-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="profile.html">Profiel</a></li>
+          <li><a href="weapons.html">Wapens</a></li>
+          <li><a href="seasonal.html">Seizoen</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-t">Account</div>
+        <ul class="foot-links">
+          <li><a href="login.html">Inloggen</a></li>
+          <li><a href="register.html">Registreren</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-t">Links</div>
+        <ul class="foot-links">
+          <li><a href="https://www.bungie.net" target="_blank">Bungie.net</a></li>
+          <li><a href="https://github.com" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <div class="foot-copy">© 2025 GuardianHQ · Niet gelieerd aan Bungie, Inc.</div>
+      <div class="socials">
+        <a href="#" class="soc-btn">𝕏</a>
+        <a href="#" class="soc-btn">📘</a>
+        <a href="https://github.com" class="soc-btn">⌥</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="js/app.js"></script>
+</body>
+</html>

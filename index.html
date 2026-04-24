@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GuardianHQ – Destiny 2 Tracker</title>
+<meta name="description" content="De beste Destiny 2 stats tracker. Bekijk je Guardian profiel, wapens, raids en meer.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+</head>
+<body>
+<!-- LOADING -->
+<div class="loading-ov" id="loading-overlay">
+  <div class="loading-t">GuardianHQ</div>
+  <div class="loading-bw"><div class="loading-bf"></div></div>
+  <div class="loading-lt">Verbinden met Vault...</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-hex">G</div>
+      <span class="logo-t">GuardianHQ</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-a active">Home</a>
+      <a href="profile.html" class="nav-a">Profiel</a>
+      <a href="weapons.html" class="nav-a">Wapens</a>
+      <a href="seasonal.html" class="nav-a">Seizoen</a>
+      <a href="raids.html" class="nav-a">Raids</a>
+      <a href="contact.html" class="nav-a">Contact</a>
+    </div>
+    <div class="nav-search">
+      <span>🔍</span>
+      <input id="main-search" placeholder="Zoek Guardian (gamertag#0000)..." type="text">
+    </div>
+    <div class="nav-btns" id="nav-btns">
+      <a href="login.html" class="btn btn-out">Inloggen</a>
+      <a href="register.html" class="btn btn-p">Account aanmaken</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-c">
+    <div>
+      <div class="badge fi"><div class="badge-dot"></div>Live · Seizoen van de Uitverkorenen</div>
+      <h1 class="hero-title fi fi1">
+        <span class="l1">Track je</span>
+        <span class="l2">Guardian</span>
+      </h1>
+      <p class="hero-sub fi fi2">De ultieme Destiny 2 companion. Bekijk stats, wapens, raid-prestaties en meer. Verbind met Bungie en ontdek alles over jouw Guardian.</p>
+      <div class="hero-acts fi fi3">
+        <a href="register.html" class="btn btn-g" style="font-size:14px;padding:11px 22px">🚀 Start nu gratis</a>
+        <a href="profile.html" class="btn btn-p" style="font-size:14px;padding:11px 22px">🔍 Zoek Guardian</a>
+      </div>
+      <div class="hero-stats fi">
+        <div><div class="hstat-v">2.4M+</div><div class="hstat-l">Guardians</div></div>
+        <div><div class="hstat-v">180M+</div><div class="hstat-l">Kills Getrackt</div></div>
+        <div><div class="hstat-v">99.9%</div><div class="hstat-l">Uptime</div></div>
+      </div>
+    </div>
+    <div class="hero-vis fi fi2">
+      <div class="hcard">
+        <div class="hcard-head">
+          <div class="gav">🗡️</div>
+          <div>
+            <div class="gname">ShadowHunter#4521</div>
+            <div class="gclass">Hunter · Steam</div>
+          </div>
+          <div class="gpow">
+            <div class="gpow-v">1810</div>
+            <div class="gpow-l">Light Level</div>
+          </div>
+        </div>
+        <div class="hcard-stats">
+          <div class="scell"><div class="scell-i">💀</div><div class="scell-v" style="color:var(--red)">24,831</div><div class="scell-n">K/D Kills</div></div>
+          <div class="scell"><div class="scell-i">🏆</div><div class="scell-v" style="color:var(--gold)">312</div><div class="scell-n">Raids</div></div>
+          <div class="scell"><div class="scell-i">⏱️</div><div class="scell-v" style="color:var(--blue)">2.847</div><div class="scell-n">Uren</div></div>
+          <div class="scell"><div class="scell-i">🎯</div><div class="scell-v" style="color:var(--green)">2.14</div><div class="scell-n">K/D Ratio</div></div>
+          <div class="scell"><div class="scell-i">⚡</div><div class="scell-v">98</div><div class="scell-n">Triomfen</div></div>
+          <div class="scell"><div class="scell-i">🔥</div><div class="scell-v" style="color:var(--purple)">47</div><div class="scell-n">Exotics</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec">
+  <div class="sec-in">
+    <div class="sec-head">
+      <div>
+        <div class="sec-title">Alles wat je <span>nodig hebt</span></div>
+        <div class="sec-sub">Van wapen-stats tot raid-clears — GuardianHQ heeft het allemaal.</div>
+        <div class="sec-div"></div>
+      </div>
+    </div>
+    <div class="feat-grid">
+      <div class="fcard"><div class="ficon">📊</div><div class="ftitle">Guardian Stats</div><div class="fdesc">Volledige statistieken van je Guardian: K/D, win-ratio, speeltijd, en meer via de officiële Bungie API.</div></div>
+      <div class="fcard"><div class="ficon">⚔️</div><div class="ftitle">Wapen Database</div><div class="fdesc">Doorblaader alle Destiny 2 wapens met filters op zeldzaamheid, type en perks. Vind het perfecte wapen.</div></div>
+      <div class="fcard"><div class="ficon">🏰</div><div class="ftitle">Raid Tracker</div><div class="fdesc">Bekijk al je raid-clears, boss-kills en persoonlijke records. Vergelijk met vrienden.</div></div>
+      <div class="fcard"><div class="ficon">🎯</div><div class="ftitle">PvP Analytics</div><div class="fdesc">Gedetailleerde Crucible statistieken. Heatmaps, wapenkeuzes en prestaties per modus.</div></div>
+      <div class="fcard"><div class="ficon">🌟</div><div class="ftitle">Seizoensinhoud</div><div class="fdesc">Blijf bij met seizoensgebonden activiteiten, challenges en beloningen. Nooit meer iets missen.</div></div>
+      <div class="fcard"><div class="ficon">🔗</div><div class="ftitle">Bungie OAuth</div><div class="fdesc">Verbind je Bungie-account veilig via officiële OAuth. Zie je volledige profiel inclusief privé-data.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WEAPONS PREVIEW -->
+<section class="sec sec-dark">
+  <div class="sec-in">
+    <div class="sec-head">
+      <div>
+        <div class="sec-title">Top <span>Wapens</span> Meta</div>
+        <div class="sec-sub">Meest gebruikte wapens deze week in de community.</div>
+        <div class="sec-div"></div>
+      </div>
+      <a href="weapons.html" class="btn btn-out">Alle wapens →</a>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-head">
+        <span class="tbl-title">⚔️ Wapen Overzicht</span>
+        <div class="ftabs">
+          <button class="ftab active" data-filter="all">Alle</button>
+          <button class="ftab" data-filter="exotic">Exotic</button>
+          <button class="ftab" data-filter="legendary">Legendary</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Wapen</th><th>Zeldzaamheid</th><th>Range</th><th>Stabiliteit</th><th>Handling</th></tr></thead>
+        <tbody id="weapons-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SEASONAL -->
+<section class="sec">
+  <div class="sec-in">
+    <div class="sec-head">
+      <div>
+        <div class="sec-title">Seizoen <span>Info</span></div>
+        <div class="sec-sub">Huidige seizoensinhoud en Trials of Osiris.</div>
+        <div class="sec-div"></div>
+      </div>
+    </div>
+    <div class="seas-grid">
+      <div class="scard">
+        <div class="s-banner">
+          <div class="s-banner-gfx"></div>
+          <div class="s-banner-t">
+            <div class="s-lbl">Seizoen 26</div>
+            <div class="s-name">Van de Uitverkorenen</div>
+          </div>
+        </div>
+        <div class="s-body">
+          <div class="s-prog-row"><span style="color:var(--t2)">Seizoen Rang</span><span style="color:var(--purple);font-weight:700">Rang 67 / 100</span></div>
+          <div class="s-pbar"><div class="s-pfill"></div></div>
+          <div class="ms-list">
+            <div class="ms-item"><div class="ms-ico">🎯</div><div class="ms-info"><div class="ms-name">Seizoensuitdaging</div><div class="ms-det">Voltooi 5 nightfalls</div></div><div class="ms-rew">+3 Rang</div></div>
+            <div class="ms-item"><div class="ms-ico">🏰</div><div class="ms-info"><div class="ms-name">Root of Nightmares</div><div class="ms-det">Eerste clear deze week</div></div><div class="ms-rew">Exotic Drop</div></div>
+            <div class="ms-item"><div class="ms-ico">⚔️</div><div class="ms-info"><div class="ms-name">Crucible Quests</div><div class="ms-det">Win 10 Crucible matches</div></div><div class="ms-rew">Legendary</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="trials-card">
+        <div class="tc-head">
+          <div class="tc-icon">⚖️</div>
+          <div><div class="tc-title">Trials of Osiris</div><div class="tc-sub">Deze week actief</div></div>
+        </div>
+        <div class="tc-map">
+          <div class="map-ico">🗺️</div>
+          <div><div class="map-nm">Burnout</div><div class="map-tp">Elimination · 3v3</div></div>
+        </div>
+        <div class="rew-list">
+          <div class="rew-item"><div class="rew-w">3</div><div class="rew-nm">Saint-14 Armor</div><div class="rew-tp">Legendary</div></div>
+          <div class="rew-item"><div class="rew-w">5</div><div class="rew-nm">Exil's Curse</div><div class="rew-tp">Legendary</div></div>
+          <div class="rew-item"><div class="rew-w">7</div><div class="rew-nm">The Messenger</div><div class="rew-tp">Adept</div></div>
+          <div class="rew-item"><div class="rew-w" style="font-size:13px">Flawless</div><div class="rew-nm">Passage to Paradise</div><div class="rew-tp" style="color:var(--gold)">Exotic</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <div class="cta-in">
+    <div>
+      <div class="cta-title">Klaar om je <span class="hl">Guardian</span> te tracken?</div>
+      <div class="cta-sub">Gratis account aanmaken. Verbind je Bungie-profiel en zie alles in één overzicht.</div>
+    </div>
+    <div class="cta-acts">
+      <a href="register.html" class="btn btn-g" style="font-size:14px;padding:12px 24px">🚀 Account Aanmaken</a>
+      <a href="contact.html" class="btn btn-out">Vragen? Contact ons</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-in">
+    <div class="foot-grid">
+      <div>
+        <a href="index.html" class="foot-logo">
+          <div class="logo-hex">G</div>
+          <span class="logo-t">GuardianHQ</span>
+        </a>
+        <p class="foot-desc">De meest complete Destiny 2 stats tracker. Powered by de officiële Bungie API.</p>
+        <p class="foot-disc">GuardianHQ is geen officieel Bungie-product. Destiny 2 en alle bijbehorende intellectuele eigendomsrechten zijn eigendom van Bungie, Inc.</p>
+      </div>
+      <div>
+        <div class="foot-col-t">Navigatie</div>
+        <ul class="foot-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="profile.html">Profiel</a></li>
+          <li><a href="weapons.html">Wapens</a></li>
+          <li><a href="seasonal.html">Seizoen</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-t">Account</div>
+        <ul class="foot-links">
+          <li><a href="login.html">Inloggen</a></li>
+          <li><a href="register.html">Registreren</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-t">Links</div>
+        <ul class="foot-links">
+          <li><a href="https://www.bungie.net" target="_blank">Bungie.net</a></li>
+          <li><a href="https://www.bungie.net/en/Application" target="_blank">Bungie API</a></li>
+          <li><a href="https://github.com" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <div class="foot-copy">© 2025 GuardianHQ · Niet gelieerd aan Bungie, Inc.</div>
+      <div class="socials">
+        <a href="#" class="soc-btn">𝕏</a>
+        <a href="#" class="soc-btn">📘</a>
+        <a href="https://github.com" class="soc-btn">⌥</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

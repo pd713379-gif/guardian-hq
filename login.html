@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inloggen – GuardianHQ</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-a">Home</a>
+      <a href="weapons.html" class="nav-a">Wapens</a>
+      <a href="contact.html" class="nav-a">Contact</a>
+    </div>
+    <div class="nav-btns" id="nav-btns">
+      <a href="register.html" class="btn btn-p">Account aanmaken</a>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-bg-grad"></div>
+<div class="auth-bg-grid"></div>
+
+<div class="auth-page">
+  <div class="auth-card fi">
+    <div class="auth-logo">
+      <div class="auth-logo-hex">G</div>
+      <div class="auth-logo-t">GuardianHQ</div>
+      <div class="auth-logo-s">Destiny 2 Companion</div>
+    </div>
+    <div class="auth-ttl">Welkom terug</div>
+    <div class="auth-sub">Log in om je Guardian-stats te bekijken.</div>
+
+    <div class="alert alert-error" id="login-error" style="display:none">⚠️ <span id="login-error-msg"></span></div>
+
+    <form id="login-form">
+      <div class="fg">
+        <label class="flbl" for="l-email">E-mailadres</label>
+        <input class="finp" id="l-email" type="email" placeholder="guardian@example.com" required>
+      </div>
+      <div class="fg">
+        <label class="flbl" for="l-pass">Wachtwoord</label>
+        <input class="finp" id="l-pass" type="password" placeholder="••••••••" required>
+        <div style="text-align:right;margin-top:6px">
+          <a href="#" style="font-size:12px;color:var(--blue);text-decoration:none" id="forgot-link">Wachtwoord vergeten?</a>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-p btn-full" id="login-btn">🔑 Inloggen</button>
+    </form>
+
+    <div class="auth-div"><div class="auth-div-l"></div><div class="auth-div-t">of</div><div class="auth-div-l"></div></div>
+
+    <a href="https://www.bungie.net/en/OAuth/Authorize?client_id=51944&response_type=code&redirect_uri=https://guardianhq.vercel.app/profile.html"
+       class="btn btn-bungie btn-full">⬡ Inloggen met Bungie.net</a>
+
+    <div class="auth-foot">Nog geen account? <a href="register.html">Aanmaken →</a></div>
+  </div>
+</div>
+
+<script type="module">
+import { auth, signInWithEmailAndPassword, sendPasswordResetEmail } from './js/firebase-config.js';
+// Re-export sendPasswordResetEmail if needed
+import { getAuth, sendPasswordResetEmail as resetPw } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  const btn   = document.getElementById('login-btn');
+  const errDiv = document.getElementById('login-error');
+  const errMsg = document.getElementById('login-error-msg');
+
+  errDiv.style.display = 'none';
+  btn.innerHTML = '⏳ Inloggen...'; btn.disabled = true;
+
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    // Sla gebruiker op in sessionStorage voor nav
+    sessionStorage.setItem('ghq_user', JSON.stringify({
+      uid:      cred.user.uid,
+      email:    cred.user.email,
+      username: cred.user.displayName || email.split('@')[0]
+    }));
+    const redirect = new URLSearchParams(location.search).get('redirect');
+    window.location.href = redirect || 'index.html';
+  } catch (err) {
+    btn.innerHTML = '🔑 Inloggen'; btn.disabled = false;
+    const msgs = {
+      'auth/invalid-credential':   'E-mail of wachtwoord onjuist.',
+      'auth/user-not-found':        'Geen account gevonden met dit e-mailadres.',
+      'auth/wrong-password':        'Wachtwoord onjuist.',
+      'auth/too-many-requests':     'Te veel pogingen. Probeer later opnieuw.',
+      'auth/network-request-failed':'Geen internetverbinding.',
+    };
+    errDiv.style.display='flex';
+    errMsg.textContent = msgs[err.code] || 'Er ging iets mis: ' + err.message;
+  }
+});
+
+// Wachtwoord vergeten
+document.getElementById('forgot-link').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('l-email').value.trim();
+  if (!email) { alert('Vul eerst je e-mailadres in.'); return; }
+  try {
+    await resetPw(auth, email);
+    alert(`Reset-mail verstuurd naar ${email}. Controleer je inbox.`);
+  } catch (err) {
+    alert('Kon geen reset-mail sturen. Controleer het e-mailadres.');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wapens – GuardianHQ</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-a">Home</a>
+      <a href="profile.html" class="nav-a">Profiel</a>
+      <a href="weapons.html" class="nav-a active">Wapens</a>
+      <a href="seasonal.html" class="nav-a">Seizoen</a>
+      <a href="raids.html" class="nav-a">Raids</a>
+      <a href="contact.html" class="nav-a">Contact</a>
+    </div>
+    <div class="nav-btns" id="nav-btns"></div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="ph-in">
+    <div class="ph-lbl">Destiny 2 Database</div>
+    <div class="ph-title">⚔️ Wapen Database</div>
+    <div class="ph-desc">Ontdek alle wapens, bekijk stats en vind de perfecte loadout voor jouw Guardian.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-in">
+    <div class="tbl-wrap">
+      <div class="tbl-head">
+        <span class="tbl-title">⚔️ Alle Wapens</span>
+        <div class="ftabs">
+          <button class="ftab active" data-filter="all">Alle</button>
+          <button class="ftab" data-filter="exotic">Exotic</button>
+          <button class="ftab" data-filter="legendary">Legendary</button>
+          <button class="ftab" data-filter="rare">Rare</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Wapen</th><th>Zeldzaamheid</th><th>Range</th><th>Stabiliteit</th><th>Handling</th></tr></thead>
+        <tbody id="weapons-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <div class="foot-bot">
+      <div class="foot-copy">© 2025 GuardianHQ · Niet gelieerd aan Bungie, Inc.</div>
+    </div>
+  </div>
+</footer>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Account Aanmaken – GuardianHQ</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-a">Home</a>
+      <a href="contact.html" class="nav-a">Contact</a>
+    </div>
+    <div class="nav-btns" id="nav-btns">
+      <a href="login.html" class="btn btn-out">Inloggen</a>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-bg-grad"></div>
+<div class="auth-bg-grid"></div>
+
+<div class="auth-page">
+  <div class="auth-card fi" style="max-width:500px">
+    <div class="auth-logo">
+      <div class="auth-logo-hex">G</div>
+      <div class="auth-logo-t">GuardianHQ</div>
+      <div class="auth-logo-s">Word een Guardian</div>
+    </div>
+    <div class="auth-ttl">Account Aanmaken</div>
+    <div class="auth-sub">Vul je gegevens in. Je ontvangt een welkomstmail na registratie.</div>
+
+    <div class="alert alert-error" id="reg-error" style="display:none">⚠️ <span id="reg-error-msg"></span></div>
+    <div class="alert alert-success" id="reg-success" style="display:none">✅ <span id="reg-success-msg"></span></div>
+
+    <form id="register-form">
+      <div class="fg">
+        <label class="flbl" for="r-username">Gebruikersnaam</label>
+        <input class="finp" id="r-username" type="text" placeholder="ShadowHunter" required minlength="3" maxlength="24">
+      </div>
+      <div class="fg">
+        <label class="flbl" for="r-gamertag">Bungie Gamertag</label>
+        <input class="finp" id="r-gamertag" type="text" placeholder="Guardian#1234" required>
+        <div class="fnote">Bijv. Guardian#1234</div>
+      </div>
+      <div class="fg">
+        <label class="flbl" for="r-email">E-mailadres</label>
+        <input class="finp" id="r-email" type="email" placeholder="guardian@example.com" required>
+        <div class="fnote">Je welkomstmail wordt hiernaar verstuurd.</div>
+      </div>
+      <div class="frow">
+        <div class="fg">
+          <label class="flbl" for="r-pass">Wachtwoord</label>
+          <input class="finp" id="r-pass" type="password" placeholder="Min. 6 tekens" required minlength="6">
+        </div>
+        <div class="fg">
+          <label class="flbl" for="r-confirm">Bevestig</label>
+          <input class="finp" id="r-confirm" type="password" placeholder="Herhaal" required>
+        </div>
+      </div>
+      <!-- Sterkte meter -->
+      <div style="margin-top:-8px;margin-bottom:16px">
+        <div style="height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;margin-bottom:5px">
+          <div id="strength-bar" style="height:100%;width:0%;border-radius:2px;transition:all .3s"></div>
+        </div>
+        <div id="strength-lbl" style="font-size:11px;color:var(--t3)"></div>
+      </div>
+      <button type="submit" class="btn btn-g btn-full" id="reg-btn">🚀 Account Aanmaken</button>
+    </form>
+
+    <div class="auth-foot">Al een account? <a href="login.html">Inloggen →</a></div>
+  </div>
+</div>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script type="module">
+import { auth, db, createUserWithEmailAndPassword, updateProfile, doc, setDoc } from './js/firebase-config.js';
+
+// EmailJS initialiseren
+emailjs.init('Kzu6sQd_AB5cDC0nU');
+
+// Wachtwoord sterkte meter
+document.getElementById('r-pass').addEventListener('input', function() {
+  const v = this.value;
+  const bar = document.getElementById('strength-bar');
+  const lbl = document.getElementById('strength-lbl');
+  let s = 0;
+  if (v.length >= 6) s++;
+  if (v.length >= 10) s++;
+  if (/[A-Z]/.test(v)) s++;
+  if (/[0-9]/.test(v)) s++;
+  if (/[^A-Za-z0-9]/.test(v)) s++;
+  const lvl = [
+    { w:'20%', c:'var(--red)',   t:'Zeer zwak' },
+    { w:'40%', c:'var(--red)',   t:'Zwak' },
+    { w:'60%', c:'var(--gold)',  t:'Matig' },
+    { w:'80%', c:'var(--blue)',  t:'Sterk' },
+    { w:'100%',c:'var(--green)', t:'Zeer sterk ✓' },
+  ];
+  if (!v.length) { bar.style.width='0%'; lbl.textContent=''; return; }
+  const l = lvl[Math.max(0, s-1)];
+  bar.style.width=l.w; bar.style.background=l.c;
+  lbl.textContent=l.t; lbl.style.color=l.c;
+});
+
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById('r-username').value.trim();
+  const gamertag = document.getElementById('r-gamertag').value.trim();
+  const email    = document.getElementById('r-email').value.trim();
+  const pass     = document.getElementById('r-pass').value;
+  const confirm  = document.getElementById('r-confirm').value;
+  const btn      = document.getElementById('reg-btn');
+  const errDiv   = document.getElementById('reg-error');
+  const errMsg   = document.getElementById('reg-error-msg');
+  const succDiv  = document.getElementById('reg-success');
+  const succMsg  = document.getElementById('reg-success-msg');
+
+  errDiv.style.display = 'none';
+
+  if (pass !== confirm) {
+    errDiv.style.display='flex'; errMsg.textContent='Wachtwoorden komen niet overeen.'; return;
+  }
+
+  btn.innerHTML = '⏳ Account aanmaken...'; btn.disabled = true;
+
+  try {
+    // 1. Firebase account aanmaken
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+
+    // 2. Naam opslaan in Firebase Auth
+    await updateProfile(cred.user, { displayName: username });
+
+    // 3. Extra data opslaan in Firestore
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      username,
+      gamertag,
+      email,
+      createdAt: new Date().toISOString()
+    });
+
+    // 4. Welkomstmail sturen via EmailJS
+    try {
+      await emailjs.send('service_usefhy9', 'kq2yx3d', {
+        to_name:   username,
+        to_email:  email,
+        gamertag:  gamertag,
+        login_url: 'https://guardianhq.vercel.app/login.html'
+      });
+      succMsg.textContent = `Account aangemaakt! Controleer je inbox (${email}) voor je welkomstmail.`;
+    } catch (mailErr) {
+      console.warn('E-mail mislukt:', mailErr);
+      succMsg.textContent = `Account aangemaakt! Je kunt nu inloggen met ${email}.`;
+    }
+
+    document.getElementById('register-form').style.display = 'none';
+    succDiv.style.display = 'flex';
+    setTimeout(() => window.location.href = 'login.html', 3000);
+
+  } catch (err) {
+    btn.innerHTML = '🚀 Account Aanmaken'; btn.disabled = false;
+    const msgs = {
+      'auth/email-already-in-use': 'Dit e-mailadres is al geregistreerd.',
+      'auth/invalid-email':        'Ongeldig e-mailadres.',
+      'auth/weak-password':        'Wachtwoord is te zwak (min. 6 tekens).',
+      'auth/network-request-failed': 'Geen internetverbinding.',
+    };
+    errDiv.style.display='flex';
+    errMsg.textContent = msgs[err.code] || 'Er ging iets mis: ' + err.message;
+  }
+});
+</script>
+</body>
+</html>
