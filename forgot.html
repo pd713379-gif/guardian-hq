@@ -1,1 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forgot Password – GuardianHQ</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
+    <div class="nav-btns" id="nav-btns">
+      <a href="login.html" class="btn btn-out" data-en="Back to Login" data-nl="Terug naar Inloggen">Back to Login</a>
+      <button class="btn btn-p" id="lang-btn" onclick="toggleLang()" style="min-width:42px">🌐 NL</button>
+    </div>
+  </div>
+</nav>
 
+<div class="auth-bg-grad"></div>
+<div class="auth-bg-grid"></div>
+
+<div class="auth-page">
+  <div class="auth-card fi">
+    <div class="auth-logo">
+      <div class="auth-logo-hex">G</div>
+      <div class="auth-logo-t">GuardianHQ</div>
+      <div class="auth-logo-s" data-en="Password Recovery" data-nl="Wachtwoord Herstel">Password Recovery</div>
+    </div>
+
+    <!-- STAP 1: Email invullen -->
+    <div id="step-1">
+      <div class="auth-ttl" data-en="Forgot Password?" data-nl="Wachtwoord Vergeten?">Forgot Password?</div>
+      <div class="auth-sub" data-en="Enter your email address and we'll send you a secure reset link. Valid for 1 hour." data-nl="Vul je e-mailadres in en we sturen je een beveiligde reset-link. Geldig voor 1 uur.">Enter your email address and we'll send you a secure reset link. Valid for 1 hour.</div>
+
+      <div class="alert alert-info" style="margin-bottom:20px">
+        🔒 <span data-en="For security, we never send passwords by email. You'll receive a link to set a new password yourself." data-nl="Voor je veiligheid sturen we nooit wachtwoorden per mail. Je ontvangt een link om zelf een nieuw wachtwoord in te stellen.">For security, we never send passwords by email.</span>
+      </div>
+
+      <div class="alert alert-error" id="forgot-error" style="display:none">⚠️ <span id="forgot-error-msg"></span></div>
+
+      <form id="forgot-form">
+        <div class="fg">
+          <label class="flbl" for="f-email" data-en="Email Address" data-nl="E-mailadres">Email Address</label>
+          <input class="finp" id="f-email" type="email" placeholder="guardian@example.com" required>
+        </div>
+        <button type="submit" class="btn btn-p btn-full" id="forgot-btn">
+          📧 <span data-en="Send Reset Link" data-nl="Stuur Reset-link">Send Reset Link</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- STAP 2: Bevestiging -->
+    <div id="step-2" style="display:none;text-align:center">
+      <div style="font-size:56px;margin-bottom:20px">📬</div>
+      <div class="auth-ttl" data-en="Check your inbox!" data-nl="Controleer je inbox!">Check your inbox!</div>
+      <div class="auth-sub" id="sent-desc"></div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;margin:24px 0;text-align:left">
+        <div style="font-family:var(--fu);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:12px" data-en="Next steps:" data-nl="Volgende stappen:">Next steps:</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0">1.</span>
+            <span style="font-size:13px;color:var(--t2)" data-en="Open the email from GuardianHQ" data-nl="Open de mail van GuardianHQ">Open the email from GuardianHQ</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0">2.</span>
+            <span style="font-size:13px;color:var(--t2)" data-en="Click the reset link (valid for 1 hour)" data-nl="Klik op de reset-link (geldig 1 uur)">Click the reset link (valid for 1 hour)</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0">3.</span>
+            <span style="font-size:13px;color:var(--t2)" data-en="Set your new password and login" data-nl="Stel je nieuwe wachtwoord in en log in">Set your new password and login</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:12px;color:var(--t3);margin-bottom:20px" data-en="Didn't receive an email? Check your spam folder." data-nl="Geen mail ontvangen? Controleer je spam-map.">Didn't receive an email? Check your spam folder.</div>
+
+      <button class="btn btn-out" style="width:100%;justify-content:center;margin-bottom:10px" onclick="document.getElementById('step-1').style.display='block';document.getElementById('step-2').style.display='none'">
+        🔄 <span data-en="Try again" data-nl="Opnieuw proberen">Try again</span>
+      </button>
+      <a href="login.html" class="btn btn-p" style="width:100%;justify-content:center">
+        🔑 <span data-en="Back to Login" data-nl="Terug naar Inloggen">Back to Login</span>
+      </a>
+    </div>
+
+    <div class="auth-foot" id="auth-foot-link">
+      <span data-en="Remembered your password?" data-nl="Wachtwoord toch onthouden?">Remembered your password?</span>
+      <a href="login.html" data-en="Login →" data-nl="Inloggen →">Login →</a>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBfda3IcQk-bbYHOqKhU4r8wMtOCPjTztc",
+  authDomain: "guardianhq-db216.firebaseapp.com",
+  projectId: "guardianhq-db216",
+  storageBucket: "guardianhq-db216.firebasestorage.app",
+  messagingSenderId: "370272351292",
+  appId: "1:370272351292:web:4496bd3fbad791e0fa7f39"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+document.getElementById('forgot-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email  = document.getElementById('f-email').value.trim();
+  const btn    = document.getElementById('forgot-btn');
+  const errDiv = document.getElementById('forgot-error');
+  const errMsg = document.getElementById('forgot-error-msg');
+  const lang   = document.documentElement.lang;
+
+  errDiv.style.display = 'none';
+  btn.innerHTML = '⏳ ' + (lang==='nl' ? 'Versturen...' : 'Sending...');
+  btn.disabled = true;
+
+  try {
+    await sendPasswordResetEmail(auth, email, {
+      url: 'https://guardian-hq-eight.vercel.app/login.html'
+    });
+
+    // Toon stap 2
+    document.getElementById('step-1').style.display = 'none';
+    document.getElementById('step-2').style.display = 'block';
+    document.getElementById('auth-foot-link').style.display = 'none';
+    document.getElementById('sent-desc').textContent = lang === 'nl'
+      ? `We hebben een reset-link gestuurd naar ${email}. Controleer ook je spam-map.`
+      : `We sent a reset link to ${email}. Also check your spam folder.`;
+
+  } catch(err) {
+    btn.innerHTML = '📧 <span>' + (lang==='nl' ? 'Stuur Reset-link' : 'Send Reset Link') + '</span>';
+    btn.disabled = false;
+    const msgs = {
+      en: {
+        'auth/user-not-found':         'No account found with this email address.',
+        'auth/invalid-email':          'Invalid email address.',
+        'auth/too-many-requests':      'Too many attempts. Please try again later.',
+        'auth/network-request-failed': 'No internet connection.',
+      },
+      nl: {
+        'auth/user-not-found':         'Geen account gevonden met dit e-mailadres.',
+        'auth/invalid-email':          'Ongeldig e-mailadres.',
+        'auth/too-many-requests':      'Te veel pogingen. Probeer later opnieuw.',
+        'auth/network-request-failed': 'Geen internetverbinding.',
+      }
+    };
+    errDiv.style.display = 'flex';
+    errMsg.textContent = (msgs[lang]||msgs.en)[err.code] || err.message;
+  }
+});
+</script>
+
+<script>
+let currentLang = localStorage.getItem('ghq_lang') || 'en';
+function applyLang() {
+  document.documentElement.lang = currentLang;
+  document.getElementById('lang-btn').textContent = currentLang === 'en' ? '🌐 NL' : '🌐 EN';
+  document.title = currentLang === 'nl' ? 'Wachtwoord Vergeten – GuardianHQ' : 'Forgot Password – GuardianHQ';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = currentLang === 'nl' ? el.dataset.nl : el.dataset.en;
+  });
+}
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'nl' : 'en';
+  localStorage.setItem('ghq_lang', currentLang);
+  applyLang();
+}
+applyLang();
+</script>
+
+<script src="js/app.js"></script>
+</body>
+</html>
