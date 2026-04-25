@@ -1,5 +1,5 @@
 // GuardianHQ - Main JS
-const API_KEY = '8dde842300df4ffbae605b0f48cf43f9';
+const API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
 const BUNGIE_ROOT = 'https://www.bungie.net/Platform';
 
 // ===== AUTH (Firebase sessionStorage) =====
