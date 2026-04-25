@@ -545,7 +545,10 @@ function startTimer() {
 // ===== LOAD ALL =====
 async function loadAll() {
   loadNews();
-  renderActivities([]); // show pool immediately
+  // Rotate pool based on day of week
+const dayRotation = new Date().getUTCDay();
+const rotatedPool = [...ACT_POOL.slice(dayRotation), ...ACT_POOL.slice(0, dayRotation)];
+renderActivities(rotatedPool);
   renderXur([]); // show xur state immediately
   try { await loadStats(); } catch(e) { console.warn(e); }
 }
