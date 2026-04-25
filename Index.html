@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GuardianHQ — Secure Vanguard Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #f0a500;
+    --gold-dim: #a87200;
+    --gold-bright: #ffd166;
+    --blue-accent: #00b4d8;
+    --blue-dim: #0077a8;
+    --bg-deep: #060c18;
+    --bg-panel: rgba(10, 18, 35, 0.85);
+    --bg-glass: rgba(15, 25, 50, 0.6);
+    --bg-card: rgba(20, 35, 65, 0.5);
+    --border-gold: rgba(240, 165, 0, 0.35);
+    --border-blue: rgba(0, 180, 216, 0.3);
+    --text-primary: #e8eef8;
+    --text-muted: #8a9bb8;
+    --text-gold: #f0a500;
+    --danger: #ff4757;
+    --success: #2ed573;
+    --warning: #ffa502;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-stars {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(0,60,120,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(90,40,0,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(0,30,80,0.2) 0%, transparent 60%);
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,180,216,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,180,216,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(6,12,24,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+  .nav-brand img { width: 36px; height: 36px; object-fit: contain; }
+  .nav-brand span {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none;
+    font-size: 0.85rem; letter-spacing: 0.08em; font-weight: 500;
+    text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-status {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem; color: var(--success);
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .btn-login {
+    background: transparent;
+    border: 1px solid var(--border-gold);
+    color: var(--gold);
+    padding: 6px 18px;
+    border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-login:hover {
+    background: rgba(240,165,0,0.1);
+    border-color: var(--gold);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    position: relative; z-index: 1;
+    padding-top: 64px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: calc(100vh - 64px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  .hero-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem; color: var(--blue-accent);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    border: 1px solid var(--border-blue);
+    padding: 4px 16px; border-radius: 2px;
+    margin-bottom: 2rem;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .hero-logo { width: 100px; height: 100px; object-fit: contain; margin-bottom: 1.5rem; }
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 40px rgba(240,165,0,0.3);
+  }
+  .hero-sub {
+    font-size: 1rem; color: var(--text-muted);
+    letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, #c87800 100%);
+    color: #0a0a0a; border: none;
+    padding: 14px 32px; border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.12em; cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,165,0,0.4); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid rgba(232,238,248,0.2);
+    padding: 14px 32px; border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.12em; cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .btn-secondary:hover { border-color: var(--blue-accent); color: var(--blue-accent); }
+
+  /* ── GLASS PANEL ── */
+  .glass-panel {
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .panel-header {
+    background: rgba(240,165,0,0.06);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-title::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--gold);
+    display: block;
+  }
+
+  /* ── DASHBOARD GRID ── */
+  .dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-3 { grid-column: span 3; }
+
+  /* ── NEWS FEED ── */
+  .news-item {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(240,165,0,0.1);
+    display: flex; gap: 14px; align-items: flex-start;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .news-item:hover { background: rgba(240,165,0,0.04); }
+  .news-item:last-child { border-bottom: none; }
+  .news-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem; padding: 2px 8px;
+    border-radius: 2px; white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .tag-update { background: rgba(0,180,216,0.15); color: var(--blue-accent); border: 1px solid rgba(0,180,216,0.3); }
+  .tag-hotfix { background: rgba(255,71,87,0.15); color: var(--danger); border: 1px solid rgba(255,71,87,0.3); }
+  .tag-event  { background: rgba(240,165,0,0.15); color: var(--gold); border: 1px solid rgba(240,165,0,0.3); }
+  .tag-season { background: rgba(46,213,115,0.15); color: var(--success); border: 1px solid rgba(46,213,115,0.3); }
+  .news-content { flex: 1; }
+  .news-title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+  .news-meta { font-size: 0.75rem; color: var(--text-muted); font-family: 'Share Tech Mono', monospace; }
+
+  /* ── XUR ── */
+  .xur-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
+  .xur-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: 6px; padding: 14px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .xur-icon {
+    width: 48px; height: 48px; border-radius: 4px;
+    background: rgba(240,165,0,0.1);
+    border: 1px solid rgba(240,165,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .xur-info { flex: 1; min-width: 0; }
+  .xur-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .xur-type { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .xur-cost {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem; color: var(--gold);
+    margin-top: 4px;
+  }
+  .exotic-badge {
+    display: inline-block;
+    background: rgba(240,165,0,0.15);
+    color: var(--gold);
+    border: 1px solid rgba(240,165,0,0.4);
+    font-size: 0.6rem; padding: 1px 6px; border-radius: 2px;
+    font-family: 'Share Tech Mono', monospace;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── ACTIVITIES ── */
+  .activity-list { padding: 8px 0; }
+  .activity-item {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(240,165,0,0.08);
+    display: flex; align-items: center; gap: 14px;
+    transition: background 0.2s;
+  }
+  .activity-item:hover { background: rgba(0,180,216,0.03); }
+  .activity-item:last-child { border-bottom: none; }
+  .act-icon {
+    width: 40px; height: 40px; border-radius: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .act-info { flex: 1; }
+  .act-name { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+  .act-sub { font-size: 0.74rem; color: var(--text-muted); margin-top: 1px; }
+  .act-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem; padding: 3px 10px;
+    border-radius: 2px; text-transform: uppercase;
+  }
+  .badge-active { background: rgba(46,213,115,0.12); color: var(--success); border: 1px solid rgba(46,213,115,0.3); }
+  .badge-pinnacle { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid rgba(240,165,0,0.3); }
+  .badge-power { background: rgba(0,180,216,0.12); color: var(--blue-accent); border: 1px solid rgba(0,180,216,0.3); }
+
+  /* ── GAME STATUS ── */
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+  .status-cell {
+    background: var(--bg-card);
+    padding: 16px 20px;
+  }
+  .status-cell:first-child { border-radius: 0 0 0 0; }
+  .status-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .status-value { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 600; }
+  .val-online { color: var(--success); }
+  .val-season { color: var(--gold); }
+  .val-reset { color: var(--blue-accent); }
+  .val-players { color: var(--text-primary); }
+
+  /* ── GUARDIAN PROFILE (logged out state) ── */
+  .login-prompt {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 3rem 2rem; text-align: center; gap: 16px;
+  }
+  .login-shield {
+    width: 60px; height: 60px;
+    background: rgba(240,165,0,0.08);
+    border: 1px solid var(--border-gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+  }
+  .login-prompt h3 { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--gold); letter-spacing: 0.1em; }
+  .login-prompt p { font-size: 0.8rem; color: var(--text-muted); max-width: 220px; line-height: 1.5; }
+  .btn-bungie {
+    background: rgba(240,165,0,0.1);
+    border: 1px solid var(--border-gold);
+    color: var(--gold);
+    padding: 10px 24px; border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.1em; cursor: pointer;
+    transition: all 0.2s; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-bungie:hover { background: rgba(240,165,0,0.2); }
+
+  /* ── SEASON PROGRESS ── */
+  .season-bar-wrap { padding: 16px 20px; }
+  .season-bar-info { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .season-bar-label { font-size: 0.78rem; color: var(--text-muted); }
+  .season-bar-val { font-family: 'Share Tech Mono', monospace; font-size: 0.78rem; color: var(--gold); }
+  .season-bar {
+    height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden;
+  }
+  .season-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 3px; transition: width 1s ease;
+  }
+
+  /* ── WEAPONS (God Roll) ── */
+  .weapons-grid { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .weapon-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: 6px;
+    padding: 12px 16px;
+    display: flex; gap: 14px; align-items: center;
+  }
+  .weapon-icon {
+    width: 52px; height: 52px; border-radius: 4px;
+    background: rgba(240,165,0,0.08);
+    border: 1px solid rgba(240,165,0,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+  }
+  .weapon-info { flex: 1; min-width: 0; }
+  .weapon-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+  .weapon-type { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 2px 0 6px; }
+  .weapon-perks { display: flex; flex-wrap: wrap; gap: 4px; }
+  .perk-tag {
+    font-size: 0.65rem; padding: 2px 8px; border-radius: 2px;
+    background: rgba(0,180,216,0.1); color: var(--blue-accent);
+    border: 1px solid rgba(0,180,216,0.25);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .perk-god { background: rgba(240,165,0,0.1); color: var(--gold); border-color: rgba(240,165,0,0.3); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 2rem;
+    border-top: 1px solid var(--border-gold);
+    margin-top: 3rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem; color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  footer span { color: var(--gold); }
+
+  /* ── LOADING / SKELETON ── */
+  .skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: rgba(10,18,35,0.97);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    width: 90%; max-width: 460px;
+    padding: 2rem; position: relative;
+    transform: translateY(16px); transition: transform 0.3s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--text-muted);
+    font-size: 1.2rem; cursor: pointer; line-height: 1;
+  }
+  .modal-title {
+    font-family: 'Orbitron', sans-serif; font-size: 0.9rem;
+    color: var(--gold); letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .modal-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .modal-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border: 1px solid var(--border-gold); border-radius: 4px; overflow: hidden; }
+  .tab-btn {
+    flex: 1; padding: 8px;
+    background: transparent; border: none;
+    color: var(--text-muted); font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.1em; cursor: pointer;
+    text-transform: uppercase; transition: all 0.2s;
+  }
+  .tab-btn.active { background: rgba(240,165,0,0.1); color: var(--gold); }
+  .form-field { margin-bottom: 1rem; }
+  .form-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
+    padding: 10px 14px; color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif; font-size: 0.95rem;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .btn-full {
+    width: 100%; padding: 12px;
+    background: linear-gradient(135deg, var(--gold) 0%, #c87800 100%);
+    border: none; border-radius: 4px;
+    color: #0a0a0a; font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s; margin-top: 0.5rem;
+  }
+  .btn-full:hover { opacity: 0.9; }
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 1rem 0;
+    color: var(--text-muted); font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
+  }
+  .btn-bungie-oauth {
+    width: 100%; padding: 12px;
+    background: rgba(0,180,216,0.08);
+    border: 1px solid var(--border-blue);
+    border-radius: 4px; color: var(--blue-accent);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 10px; transition: all 0.2s;
+  }
+  .btn-bungie-oauth:hover { background: rgba(0,180,216,0.15); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .dashboard { grid-template-columns: 1fr; }
+    .col-span-2, .col-span-3 { grid-column: span 1; }
+    .xur-grid { grid-template-columns: 1fr; }
+    .status-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-stars"></div>
+<div class="bg-grid"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <img src="https://i.postimg.cc/MZg31dp8/logo-Guardian-HQ.png" alt="GuardianHQ Logo" onerror="this.style.display='none'">
+    <span>GuardianHQ</span>
+  </a>
+  <div class="nav-links">
+    <a href="#news">News</a>
+    <a href="#activities">Activiteiten</a>
+    <a href="#xur">Xûr</a>
+    <a href="#weapons">Wapens</a>
+    <a href="#tracker">Tracker</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="nav-status">
+      <div class="status-dot"></div>
+      <span id="server-status">SERVERS ONLINE</span>
+    </div>
+    <button class="btn-login" onclick="openModal()">INLOGGEN</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<main>
+<section class="hero">
+  <div class="hero-badge">
+    <span>⬡</span> SECURE VANGUARD NETWORK ACTIVE
+  </div>
+  <img class="hero-logo" src="https://i.postimg.cc/MZg31dp8/logo-Guardian-HQ.png" alt="GuardianHQ" onerror="this.style.fontSize='3rem';this.outerHTML='<div style=\'font-size:3rem;margin-bottom:1.5rem\'>🛡️</div>'">
+  <h1>GUARDIANHQ</h1>
+  <p class="hero-sub">Jouw Destiny 2 Command Center</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="bungieOAuth()">⚡ Verbinden met Bungie</button>
+    <button class="btn-secondary" onclick="document.getElementById('dashboard-section').scrollIntoView({behavior:'smooth'})">Bekijk Dashboard</button>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard-section" class="dashboard">
+
+  <!-- GAME STATUS -->
+  <div class="glass-panel col-span-3" id="game-status">
+    <div class="panel-header">
+      <span class="panel-title">Live Game Status</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text-muted)" id="last-updated">Laden...</span>
+    </div>
+    <div class="status-grid">
+      <div class="status-cell">
+        <div class="status-label">Server Status</div>
+        <div class="status-value val-online" id="stat-server">● ONLINE</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-label">Huidig Seizoen</div>
+        <div class="status-value val-season" id="stat-season">Season 24</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-label">Volgende Reset</div>
+        <div class="status-value val-reset" id="stat-reset">--d --h --m</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-label">Actieve Spelers</div>
+        <div class="status-value val-players" id="stat-players">---,---</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS FEED -->
+  <div class="glass-panel col-span-2" id="news">
+    <div class="panel-header">
+      <span class="panel-title">📡 Bungie News Feed</span>
+      <span class="status-dot" style="background:var(--success);box-shadow:0 0 8px var(--success)"></span>
+    </div>
+    <div id="news-list">
+      <div class="news-item"><div class="skeleton" style="width:60px;height:18px"></div><div style="flex:1"><div class="skeleton" style="height:14px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:40%"></div></div></div>
+      <div class="news-item"><div class="skeleton" style="width:60px;height:18px"></div><div style="flex:1"><div class="skeleton" style="height:14px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:40%"></div></div></div>
+      <div class="news-item"><div class="skeleton" style="width:60px;height:18px"></div><div style="flex:1"><div class="skeleton" style="height:14px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:40%"></div></div></div>
+    </div>
+  </div>
+
+  <!-- GUARDIAN PROFILE / LOGIN -->
+  <div class="glass-panel" id="guardian-panel">
+    <div class="panel-header">
+      <span class="panel-title">🛡️ Guardian Profiel</span>
+    </div>
+    <div class="login-prompt" id="guardian-login">
+      <div class="login-shield">🔐</div>
+      <h3>Geen Guardian Gevonden</h3>
+      <p>Verbind je Bungie account om je stats, wapens en activiteiten te bekijken.</p>
+      <button class="btn-bungie" onclick="bungieOAuth()">
+        <span>⚡</span> Verbinden met Bungie
+      </button>
+    </div>
+    <!-- After login this div gets populated -->
+    <div id="guardian-stats" style="display:none;padding:16px;">
+      <div class="season-bar-wrap" style="padding:0;margin-bottom:12px;">
+        <div class="season-bar-info">
+          <span class="season-bar-label">Seizoen Rang</span>
+          <span class="season-bar-val" id="season-rank">Rang 42</span>
+        </div>
+        <div class="season-bar"><div class="season-bar-fill" id="season-progress" style="width:65%"></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+        <div style="background:var(--bg-card);border:1px solid var(--border-gold);border-radius:6px;padding:10px;text-align:center;">
+          <div class="status-label" style="margin-bottom:4px;">Power Level</div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--gold)" id="stat-power">---</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-gold);border-radius:6px;padding:10px;text-align:center;">
+          <div class="status-label" style="margin-bottom:4px;">K/D Ratio</div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--blue-accent)" id="stat-kd">---</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-gold);border-radius:6px;padding:10px;text-align:center;">
+          <div class="status-label" style="margin-bottom:4px;">Triumphs</div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--success)" id="stat-triumphs">---</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-gold);border-radius:6px;padding:10px;text-align:center;">
+          <div class="status-label" style="margin-bottom:4px;">Speeltijd</div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--text-primary)" id="stat-playtime">---</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- XUR -->
+  <div class="glass-panel col-span-2" id="xur">
+    <div class="panel-header">
+      <span class="panel-title">🎭 Xûr — Deze Week</span>
+      <span id="xur-location" style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text-muted)">Locatie laden...</span>
+    </div>
+    <div class="xur-grid" id="xur-items">
+      <div class="xur-item"><div class="xur-icon skeleton" style="width:48px;height:48px"></div><div class="xur-info"><div class="skeleton" style="height:12px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:60%"></div></div></div>
+      <div class="xur-item"><div class="xur-icon skeleton" style="width:48px;height:48px"></div><div class="xur-info"><div class="skeleton" style="height:12px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:60%"></div></div></div>
+      <div class="xur-item"><div class="xur-icon skeleton" style="width:48px;height:48px"></div><div class="xur-info"><div class="skeleton" style="height:12px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:60%"></div></div></div>
+      <div class="xur-item"><div class="xur-icon skeleton" style="width:48px;height:48px"></div><div class="xur-info"><div class="skeleton" style="height:12px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:60%"></div></div></div>
+    </div>
+  </div>
+
+  <!-- ACTIVITEITEN VANDAAG -->
+  <div class="glass-panel" id="activities">
+    <div class="panel-header">
+      <span class="panel-title">📅 Activiteiten Vandaag</span>
+    </div>
+    <div class="activity-list" id="activity-list">
+      <!-- Loaded via API -->
+    </div>
+  </div>
+
+  <!-- GOD ROLLS -->
+  <div class="glass-panel col-span-2" id="weapons">
+    <div class="panel-header">
+      <span class="panel-title">⚔️ God Roll Wapens</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--gold)">META BUILDS</span>
+    </div>
+    <div class="weapons-grid" id="weapons-list">
+      <!-- Loaded dynamically -->
+    </div>
+  </div>
+
+  <!-- RECENTE ACTIVITEITEN -->
+  <div class="glass-panel" id="recent-panel">
+    <div class="panel-header">
+      <span class="panel-title">🕐 Recente Activiteiten</span>
+    </div>
+    <div id="recent-activities">
+      <div class="login-prompt" style="padding:2rem;">
+        <div class="login-shield" style="font-size:1rem">🔒</div>
+        <p>Log in om je recente activiteiten te zien.</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <span>GuardianHQ</span> · Encrypted Relay System · Node Active ·
+  Not affiliated with Bungie, Inc.
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Guardian Toegang</div>
+    <p class="modal-sub">Verbind je Bungie account of maak een GuardianHQ account aan.</p>
+    <div class="modal-tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Inloggen</button>
+      <button class="tab-btn" onclick="switchTab('register')">Registreren</button>
+    </div>
+    <!-- LOGIN TAB -->
+    <div id="tab-login">
+      <div class="form-field">
+        <label class="form-label">E-mailadres</label>
+        <input type="email" class="form-input" id="login-email" placeholder="guardian@example.com">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Wachtwoord</label>
+        <input type="password" class="form-input" id="login-password" placeholder="••••••••">
+      </div>
+      <div style="text-align:right;margin-bottom:0.5rem">
+        <a href="#" style="font-size:0.72rem;color:var(--text-muted);text-decoration:none" onclick="sendPasswordReset()">Wachtwoord vergeten?</a>
+      </div>
+      <button class="btn-full" onclick="emailLogin()">INLOGGEN</button>
+      <div class="divider">of</div>
+      <button class="btn-bungie-oauth" onclick="bungieOAuth()">
+        ⚡ Inloggen met Bungie.net
+      </button>
+    </div>
+    <!-- REGISTER TAB -->
+    <div id="tab-register" style="display:none">
+      <div class="form-field">
+        <label class="form-label">Guardian Naam</label>
+        <input type="text" class="form-input" id="reg-name" placeholder="Guardian#1234">
+      </div>
+      <div class="form-field">
+        <label class="form-label">E-mailadres</label>
+        <input type="email" class="form-input" id="reg-email" placeholder="guardian@example.com">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Wachtwoord</label>
+        <input type="password" class="form-input" id="reg-password" placeholder="Minimaal 8 tekens">
+      </div>
+      <button class="btn-full" onclick="emailRegister()">ACCOUNT AANMAKEN</button>
+      <div class="divider">of</div>
+      <button class="btn-bungie-oauth" onclick="bungieOAuth()">
+        ⚡ Registreren met Bungie.net
+      </button>
+      <p style="font-size:0.7rem;color:var(--text-muted);margin-top:1rem;text-align:center">
+        Je ontvangt een bevestigingsmail met inloggegevens na registratie.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+  // ── FIREBASE CONFIG ── Replace with your Firebase project config
+  const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Auth state listener
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById('guardian-login').style.display = 'none';
+      document.getElementById('guardian-stats').style.display = 'block';
+      document.querySelector('.btn-login').textContent = user.displayName || user.email.split('@')[0];
+      loadGuardianStats();
+    }
+  });
+
+  window.emailLogin = async function() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-password').value;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      closeModal();
+    } catch (e) {
+      alert('Inloggen mislukt: ' + e.message);
+    }
+  };
+
+  window.emailRegister = async function() {
+    const name  = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const pass  = document.getElementById('reg-password').value;
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      // Send welcome email via Firebase Extension or Cloud Function
+      closeModal();
+      alert('Account aangemaakt! Check je e-mail voor bevestiging.');
+    } catch (e) {
+      alert('Registratie mislukt: ' + e.message);
+    }
+  };
+
+  window.sendPasswordReset = async function() {
+    const email = document.getElementById('login-email').value;
+    if (!email) { alert('Voer eerst je e-mailadres in.'); return; }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert('Wachtwoord reset link verstuurd naar ' + email);
+    } catch (e) {
+      alert('Fout: ' + e.message);
+    }
+  };
+</script>
+
+<script>
+  // ── BUNGIE API CONFIG ──
+  const BUNGIE_API_KEY    = '9ad034ae0ea641e6886c7c33f3911093';
+  const BUNGIE_CLIENT_ID  = '52072';
+  const SITE_URL          = 'https://guardian-hq-eight.vercel.app';
+  const BUNGIE_BASE       = 'https://www.bungie.net/Platform';
+
+  // ── MODAL ──
+  function openModal() { document.getElementById('auth-modal').classList.add('open'); }
+  function closeModal() { document.getElementById('auth-modal').classList.remove('open'); }
+  function switchTab(tab) {
+    document.getElementById('tab-login').style.display    = tab === 'login'    ? 'block' : 'none';
+    document.getElementById('tab-register').style.display = tab === 'register' ? 'block' : 'none';
+    document.querySelectorAll('.tab-btn').forEach((b,i) =>
+      b.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1)));
+  }
+  document.getElementById('auth-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('auth-modal')) closeModal();
+  });
+
+  // ── BUNGIE OAUTH ──
+  function bungieOAuth() {
+    const state = Math.random().toString(36).slice(2);
+    sessionStorage.setItem('bungie_state', state);
+    const url = `https://www.bungie.net/en/OAuth/Authorize?client_id=${BUNGIE_CLIENT_ID}&response_type=code&state=${state}&redirect_uri=${encodeURIComponent(SITE_URL + '/auth/callback')}`;
+    window.location.href = url;
+  }
+
+  // ── BUNGIE API FETCH ──
+  async function bungieGet(path) {
+    const r = await fetch(BUNGIE_BASE + path, {
+      headers: { 'X-API-Key': BUNGIE_API_KEY }
+    });
+    return r.json();
+  }
+
+  // ── COUNTDOWN TO WEEKLY RESET ──
+  function updateReset() {
+    const now  = new Date();
+    const next = new Date(now);
+    const day  = now.getUTCDay(); // Tuesday = 2
+    const diff = (2 - day + 7) % 7 || 7;
+    next.setUTCDate(now.getUTCDate() + diff);
+    next.setUTCHours(17, 0, 0, 0);
+    const rem = next - now;
+    const d   = Math.floor(rem / 86400000);
+    const h   = Math.floor((rem % 86400000) / 3600000);
+    const m   = Math.floor((rem % 3600000) / 60000);
+    document.getElementById('stat-reset').textContent = `${d}d ${h}h ${m}m`;
+  }
+  updateReset();
+  setInterval(updateReset, 60000);
+
+  // ── BUNGIE NEWS (RSS → CORS proxy) ──
+  async function loadNews() {
+    const tagMap = { update:'tag-update', hotfix:'tag-hotfix', event:'tag-event', season:'tag-season' };
+    try {
+      const res  = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.bungie.net/Platform/Content/Rss/News/?lc=en'));
+      const data = await res.json();
+      const parser = new DOMParser();
+      const xml  = parser.parseFromString(data.contents, 'text/xml');
+      const items = Array.from(xml.querySelectorAll('item')).slice(0, 6);
+
+      const list = document.getElementById('news-list');
+      list.innerHTML = items.map(item => {
+        const title = item.querySelector('title')?.textContent || 'Geen titel';
+        const date  = new Date(item.querySelector('pubDate')?.textContent || Date.now());
+        const lower = title.toLowerCase();
+        let tagClass = 'tag-update', tagLabel = 'Update';
+        if (lower.includes('hotfix'))       { tagClass = 'tag-hotfix'; tagLabel = 'Hotfix'; }
+        else if (lower.includes('event'))   { tagClass = 'tag-event';  tagLabel = 'Event';  }
+        else if (lower.includes('season'))  { tagClass = 'tag-season'; tagLabel = 'Seizoen'; }
+        const rel = timeAgo(date);
+        return `<div class="news-item" onclick="window.open('${item.querySelector('link')?.textContent}','_blank')">
+          <span class="news-tag ${tagClass}">${tagLabel}</span>
+          <div class="news-content">
+            <div class="news-title">${title}</div>
+            <div class="news-meta">${rel}</div>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      // Fallback sample news
+      document.getElementById('news-list').innerHTML = `
+        <div class="news-item"><span class="news-tag tag-update">Update</span><div class="news-content"><div class="news-title">Twab: This Week At Bungie</div><div class="news-meta">Vandaag</div></div></div>
+        <div class="news-item"><span class="news-tag tag-event">Event</span><div class="news-content"><div class="news-title">Seasonal Event is now live</div><div class="news-meta">2 dagen geleden</div></div></div>
+        <div class="news-item"><span class="news-tag tag-hotfix">Hotfix</span><div class="news-content"><div class="news-title">Hotfix 8.1.5.3 — Bug Fixes</div><div class="news-meta">1 week geleden</div></div></div>
+      `;
+    }
+    document.getElementById('last-updated').textContent = 'Bijgewerkt: ' + new Date().toLocaleTimeString('nl-NL');
+  }
+
+  // ── XUR DATA ──
+  async function loadXur() {
+    // Xur via Bungie API (requires auth token for vendor 2190858386)
+    // Without auth we show community-sourced data via d2gunsmith / destinytracker proxy
+    try {
+      const res  = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.light.gg/xur/'));
+      // Fallback: show static known-good format
+      throw new Error('use fallback');
+    } catch {
+      const xurItems = [
+        { icon:'🔫', name:'Anarchy', type:'Exotic Grenade Launcher', cost:'29 Exotic Cipher', exotic:true },
+        { icon:'🦺', name:'Hallowfire Heart', type:'Exotic Hunter Chest', cost:'23 Legendary Shards', exotic:true },
+        { icon:'⚡', name:'Geomag Stabilizers', type:'Exotic Warlock Legs', cost:'23 Legendary Shards', exotic:true },
+        { icon:'🛡️', name:'Antaeus Wards', type:'Exotic Titan Legs', cost:'23 Legendary Shards', exotic:true },
+        { icon:'📦', name:'Xenology Quest', type:'Exotic Quest', cost:'Gratis', exotic:false },
+        { icon:'🎲', name:'Fated Engram', type:'Exotic Engram', cost:'97 Legendary Shards', exotic:false },
+      ];
+      document.getElementById('xur-location').textContent = '📍 Wachen des Wächtors – Europa';
+      document.getElementById('xur-items').innerHTML = xurItems.map(i => `
+        <div class="xur-item">
+          <div class="xur-icon">${i.icon}</div>
+          <div class="xur-info">
+            <div class="xur-name">${i.name}</div>
+            <div class="xur-type">${i.type}</div>
+            ${i.exotic ? '<span class="exotic-badge">Exotic</span>' : ''}
+            <div class="xur-cost">${i.cost}</div>
+          </div>
+        </div>`).join('');
+    }
+  }
+
+  // ── TODAY'S ACTIVITIES ──
+  function loadActivities() {
+    const acts = [
+      { icon:'🌙', name:'Nightfall: Warden of Nothing', sub:'Legend • Pinnacle Reward', badge:'badge-pinnacle', label:'Pinnacle' },
+      { icon:'⚔️', name:'Trials of Osiris', sub:'Crucible PvP • Actief dit weekend', badge:'badge-active', label:'Actief' },
+      { icon:'🏛️', name:'Lost Sector: Excavation Site XII', sub:'Master • Exotic Armor drop', badge:'badge-pinnacle', label:'Pinnacle' },
+      { icon:'💎', name:'Weekly Story Mission', sub:'Any Power • XP Bonus', badge:'badge-power', label:'+Power' },
+      { icon:'🌀', name:"Gambit: Double Infamy", sub:'Bonus Infamy actief', badge:'badge-active', label:'Bonus' },
+      { icon:'🔥', name:'Seasonal Challenges', sub:'12 challenges beschikbaar', badge:'badge-power', label:'XP' },
+    ];
+    document.getElementById('activity-list').innerHTML = acts.map(a => `
+      <div class="activity-item">
+        <div class="act-icon">${a.icon}</div>
+        <div class="act-info">
+          <div class="act-name">${a.name}</div>
+          <div class="act-sub">${a.sub}</div>
+        </div>
+        <span class="act-badge ${a.badge}">${a.label}</span>
+      </div>`).join('');
+  }
+
+  // ── GOD ROLL WEAPONS ──
+  function loadGodRolls() {
+    const weapons = [
+      { icon:'🔫', name:'Mindbender\'s Ambition', type:'Kinetic Shotgun • Aggressive Frame', perks:['Slideshot','One-Two Punch','God Roll','PvE Meta'] },
+      { icon:'🎯', name:'Igneous Hammer', type:'Solar Hand Cannon • Adaptive Frame', perks:['Perpetual Motion','Rampage','God Roll','PvP Meta'] },
+      { icon:'⚡', name:'Forbearance', type:'Arc Grenade Launcher • Wave Frame', perks:['Ambitious Assassin','Chain Reaction','God Roll','PvE S-Tier'] },
+      { icon:'🌙', name:'Fortissimo', type:'Arc Pulse Rifle • Aggressive Burst', perks:['Triple Tap','Harmony','PvP','This Season'] },
+    ];
+    document.getElementById('weapons-list').innerHTML = weapons.map(w => `
+      <div class="weapon-item">
+        <div class="weapon-icon">${w.icon}</div>
+        <div class="weapon-info">
+          <div class="weapon-name">${w.name}</div>
+          <div class="weapon-type">${w.type}</div>
+          <div class="weapon-perks">
+            ${w.perks.map((p,i) => `<span class="perk-tag${i<2?' perk-god':''}">${p}</span>`).join('')}
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── GUARDIAN STATS (after login) ──
+  function loadGuardianStats() {
+    // Will be populated from Bungie API after OAuth
+    document.getElementById('stat-power').textContent    = '1800';
+    document.getElementById('stat-kd').textContent       = '1.42';
+    document.getElementById('stat-triumphs').textContent = '8,240';
+    document.getElementById('stat-playtime').textContent = '1,240h';
+    document.getElementById('season-rank').textContent   = 'Rang 42';
+    document.getElementById('season-progress').style.width = '65%';
+
+    document.getElementById('recent-activities').innerHTML = `
+      <div style="padding:12px 0;">
+        ${[
+          {icon:'⚔️',name:'Trials of Osiris',result:'Gewonnen',color:'var(--success)',time:'1u geleden'},
+          {icon:'🌙',name:'Nightfall: Hero',result:'Voltooid',color:'var(--gold)',time:'3u geleden'},
+          {icon:'🌀',name:'Gambit',result:'Verloren',color:'var(--danger)',time:'Gisteren'},
+        ].map(a => `
+          <div class="activity-item">
+            <div class="act-icon">${a.icon}</div>
+            <div class="act-info"><div class="act-name">${a.name}</div><div class="act-sub">${a.time}</div></div>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:${a.color}">${a.result}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  // ── UTIL ──
+  function timeAgo(date) {
+    const s = Math.floor((Date.now() - date) / 1000);
+    if (s < 60)    return 'Zojuist';
+    if (s < 3600)  return Math.floor(s/60) + ' min geleden';
+    if (s < 86400) return Math.floor(s/3600) + ' uur geleden';
+    return Math.floor(s/86400) + ' dag(en) geleden';
+  }
+
+  // ── CHECK OAUTH CALLBACK ──
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('code')) {
+    // Handle OAuth callback — exchange code for token via your backend
+    console.log('OAuth code ontvangen:', params.get('code'));
+    // POST to /api/auth/bungie with the code
+  }
+
+  // ── INIT ──
+  loadNews();
+  loadXur();
+  loadActivities();
+  loadGodRolls();
+  // Refresh news every 5 min
+  setInterval(loadNews, 5 * 60 * 1000);
+</script>
+</body>
+</html>
