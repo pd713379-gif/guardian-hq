@@ -106,33 +106,38 @@ async function searchGuardian(gt) {
   document.getElementById('profile-gamertag').textContent = gt;
 
   try {
-    // Always search by name only (without #code) — Bungie API 500s with # encoded
-    const nameOnly = gt.includes('#') ? gt.split('#')[0] : gt;
-    const nameCode = gt.includes('#') ? parseInt(gt.split('#')[1]) : null;
+    // Use our own Vercel API proxy to avoid CORS issues with Bungie's POST endpoint
+    const searchRes = await fetch('/api/search-guardian?name=' + encodeURIComponent(gt));
 
-    const data = await bget('/Destiny2/SearchDestinyPlayer/-1/' + encodeURIComponent(nameOnly) + '/');
+    if (!searchRes.ok) {
+      const err = await searchRes.json().catch(() => ({}));
+      if (searchRes.status === 404) {
+        content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
+          <div style="font-size:40px;margin-bottom:14px">⚠️</div>
+          <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">
+            ${currentLang==='nl'?'GUARDIAN NIET GEVONDEN':'GUARDIAN NOT FOUND'}
+          </div>
+          <div style="font-size:13px;color:var(--t3);margin-bottom:20px">
+            ${currentLang==='nl'?'Controleer de gamertag. Probeer bijv. RemainsNL#6718':'Check the gamertag. Try e.g. RemainsNL#6718'}
+          </div>
+        </div>`;
+        return;
+      }
+      throw new Error(err.error || 'Search failed');
+    }
 
-    if (!data?.Response?.length) {
+    const searchData = await searchRes.json();
+    if (!searchData?.member) {
       content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
         <div style="font-size:40px;margin-bottom:14px">⚠️</div>
         <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">
           ${currentLang==='nl'?'GUARDIAN NIET GEVONDEN':'GUARDIAN NOT FOUND'}
         </div>
-        <div style="font-size:13px;color:var(--t3);margin-bottom:20px">
-          ${currentLang==='nl'?'Controleer de gamertag. Probeer bijv. RemainsNL':'Check the gamertag. Try e.g. RemainsNL'}
-        </div>
       </div>`;
       return;
     }
 
-    // Pick best match — if #code given, match on code
-    let member = data.Response[0];
-    if (nameCode && data.Response.length > 1) {
-      const match = data.Response.find(m => m.bungieGlobalDisplayNameCode === nameCode);
-      if (match) member = match;
-    }
-
-    await renderProfile(member, gt);
+    await renderProfile(searchData.member, gt);
 
   } catch(err) {
     console.error('Search error:', err);
