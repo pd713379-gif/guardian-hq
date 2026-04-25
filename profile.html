@@ -64,7 +64,7 @@
 </footer>
 
 <script>
-const API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
+const PROFILE_API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
 const BUNGIE  = 'https://www.bungie.net/Platform';
 let currentLang = localStorage.getItem('ghq_lang') || 'en';
 
@@ -90,7 +90,7 @@ function toggleLang() {
 }
 
 async function bget(path) {
-  const r = await fetch(BUNGIE + path, { headers: { 'X-API-Key': API_KEY } });
+  const r = await fetch(BUNGIE + path, { headers: { 'X-API-Key': PROFILE_API_KEY } });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return await r.json();
 }
@@ -106,35 +106,29 @@ async function searchGuardian(gt) {
   document.getElementById('profile-gamertag').textContent = gt;
 
   try {
-    // Strip # for old search endpoint — most reliable for static sites
-    const searchName = gt.replace('#', '%23');
-    const data = await bget(`/Destiny2/SearchDestinyPlayer/-1/${searchName}/`);
+    // Always search by name only (without #code) — Bungie API 500s with # encoded
+    const nameOnly = gt.includes('#') ? gt.split('#')[0] : gt;
+    const nameCode = gt.includes('#') ? parseInt(gt.split('#')[1]) : null;
+
+    const data = await bget('/Destiny2/SearchDestinyPlayer/-1/' + encodeURIComponent(nameOnly) + '/');
 
     if (!data?.Response?.length) {
-      // Try without the code part
-      const nameOnly = gt.split('#')[0];
-      const data2 = await bget(`/Destiny2/SearchDestinyPlayer/-1/${encodeURIComponent(nameOnly)}/`);
-      if (!data2?.Response?.length) {
-        content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
-          <div style="font-size:40px;margin-bottom:14px">⚠️</div>
-          <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">
-            ${currentLang==='nl'?'GUARDIAN NIET GEVONDEN':'GUARDIAN NOT FOUND'}
-          </div>
-          <div style="font-size:13px;color:var(--t3);margin-bottom:20px">
-            ${currentLang==='nl'?'Controleer de gamertag. Probeer bijv. RemainsNL#6718':'Check the gamertag. Try e.g. RemainsNL#6718'}
-          </div>
-        </div>`;
-        return;
-      }
-      await renderProfile(data2.Response[0], gt);
+      content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
+        <div style="font-size:40px;margin-bottom:14px">⚠️</div>
+        <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">
+          ${currentLang==='nl'?'GUARDIAN NIET GEVONDEN':'GUARDIAN NOT FOUND'}
+        </div>
+        <div style="font-size:13px;color:var(--t3);margin-bottom:20px">
+          ${currentLang==='nl'?'Controleer de gamertag. Probeer bijv. RemainsNL':'Check the gamertag. Try e.g. RemainsNL'}
+        </div>
+      </div>`;
       return;
     }
 
-    // If multiple results, pick the one matching the code
+    // Pick best match — if #code given, match on code
     let member = data.Response[0];
-    if (gt.includes('#') && data.Response.length > 1) {
-      const code = parseInt(gt.split('#')[1]);
-      const match = data.Response.find(m => m.bungieGlobalDisplayNameCode === code);
+    if (nameCode && data.Response.length > 1) {
+      const match = data.Response.find(m => m.bungieGlobalDisplayNameCode === nameCode);
       if (match) member = match;
     }
 
