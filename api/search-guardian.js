@@ -1,67 +1,56 @@
-// /api/search-guardian.js - Vercel serverless function
-// Proxies Bungie's new search endpoint to avoid CORS issues
-
+// api/search-guardian.js — Vercel Serverless Function
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Content-Type', 'application/json');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const { name } = req.query;
-  if (!name) return res.status(400).json({ error: 'Missing name parameter' });
+  if (!name) return res.status(400).json({ error: 'Missing name' });
 
   const API_KEY = process.env.BUNGIE_API_KEY || '9ad034ae0ea641e6886c7c33f3911093';
 
+  const displayName = name.includes('#') ? name.split('#')[0] : name;
+  const displayNameCode = name.includes('#') ? parseInt(name.split('#')[1]) : null;
+
   try {
-    // Split name and code
-    const parts = name.includes('#') ? name.split('#') : [name, null];
-    const displayName = parts[0];
-    const displayNameCode = parts[1] ? parseInt(parts[1]) : null;
+    // Use GlobalName search — works server-side without CORS issues
+    const r = await fetch('https://www.bungie.net/Platform/User/Search/GlobalName/0/', {
+      method: 'POST',
+      headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ displayNamePrefix: displayName })
+    });
+    const data = await r.json();
+    const results = data?.Response?.searchResults ?? [];
 
-    let result = null;
+    if (!results.length) return res.status(404).json({ error: 'Guardian not found' });
 
-    // Try new ExactSearch endpoint first (POST)
-    if (displayNameCode) {
-      try {
-        const exactRes = await fetch('https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayerByBungieName/-1/', {
-          method: 'POST',
-          headers: {
-            'X-API-Key': API_KEY,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ displayName, displayNameCode })
-        });
-        const exactData = await exactRes.json();
-        if (exactData?.Response?.length) {
-          result = exactData.Response[0];
-        }
-      } catch(e) {
-        console.warn('ExactSearch failed:', e.message);
+    // Find best match
+    let match = results.find(u =>
+      u.bungieGlobalDisplayName?.toLowerCase() === displayName.toLowerCase() &&
+      (!displayNameCode || u.bungieGlobalDisplayNameCode === displayNameCode)
+    ) || results.find(u =>
+      u.bungieGlobalDisplayName?.toLowerCase() === displayName.toLowerCase()
+    ) || results[0];
+
+    if (!match?.destinyMemberships?.length) {
+      return res.status(404).json({ error: 'No Destiny profile found' });
+    }
+
+    // Pick primary membership (prefer crossSaveOverride)
+    let membership = match.destinyMemberships[0];
+    for (const m of match.destinyMemberships) {
+      if (m.crossSaveOverride === m.membershipType) { membership = m; break; }
+    }
+
+    return res.status(200).json({
+      ok: true,
+      member: {
+        membershipType: membership.membershipType,
+        membershipId:   membership.membershipId,
+        bungieGlobalDisplayName: match.bungieGlobalDisplayName,
+        bungieGlobalDisplayNameCode: match.bungieGlobalDisplayNameCode,
       }
-    }
-
-    // Fallback: search by name only
-    if (!result) {
-      const searchRes = await fetch(
-        `https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/-1/${encodeURIComponent(displayName)}/`,
-        { headers: { 'X-API-Key': API_KEY } }
-      );
-      const searchData = await searchRes.json();
-      if (searchData?.Response?.length) {
-        // Pick best match on code if provided
-        if (displayNameCode) {
-          result = searchData.Response.find(m => m.bungieGlobalDisplayNameCode === displayNameCode)
-                   || searchData.Response[0];
-        } else {
-          result = searchData.Response[0];
-        }
-      }
-    }
-
-    if (!result) {
-      return res.status(404).json({ error: 'Guardian not found' });
-    }
-
-    return res.status(200).json({ ok: true, member: result });
+    });
 
   } catch(err) {
     console.error('Search error:', err);
