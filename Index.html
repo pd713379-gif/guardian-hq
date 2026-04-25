@@ -736,6 +736,45 @@
   </div>
 </div>
 
+<!-- EMAILJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init('Kzu6sQd_AB5cDC0nU');
+
+  async function sendWelcomeMail(name, email, password) {
+    try {
+      await emailjs.send('service_usefhy9', 'template_zbd4wpc', {
+        to_name:    name,
+        to_email:   email,
+        from_name:  'GuardianHQ',
+        username:   email,
+        password:   password,
+        login_url:  'https://guardian-hq-eight.vercel.app',
+        reply_to:   'noreply@guardianhq.gg'
+      });
+      console.log('Welkomstmail verstuurd naar', email);
+    } catch (e) {
+      console.error('EmailJS fout:', e);
+    }
+  }
+
+  async function sendPasswordResetMail(email) {
+    try {
+      await emailjs.send('service_usefhy9', 'template_0ncr5h7', {
+        to_name:    'Guardian',
+        to_email:   email,
+        from_name:  'GuardianHQ',
+        subject:    'Wachtwoord Reset',
+        message:    'Klik op de link om je wachtwoord te resetten.',
+        login_url:  'https://guardian-hq-eight.vercel.app',
+        reply_to:   'noreply@guardianhq.gg'
+      });
+    } catch (e) {
+      console.error('EmailJS reset fout:', e);
+    }
+  }
+</script>
+
 <!-- FIREBASE SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -776,25 +815,30 @@
   };
 
   window.emailRegister = async function() {
-    const name  = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
+    const name  = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
     const pass  = document.getElementById('reg-password').value;
+    if (!name || !email || !pass) { alert('Vul alle velden in.'); return; }
+    if (pass.length < 8) { alert('Wachtwoord moet minimaal 8 tekens zijn.'); return; }
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      // Send welcome email via Firebase Extension or Cloud Function
+      await createUserWithEmailAndPassword(auth, email, pass);
+      // Stuur welkomstmail via EmailJS
+      await sendWelcomeMail(name, email, pass);
       closeModal();
-      alert('Account aangemaakt! Check je e-mail voor bevestiging.');
+      alert('✅ Account aangemaakt! Check je e-mail voor je inloggegevens.');
     } catch (e) {
       alert('Registratie mislukt: ' + e.message);
     }
   };
 
   window.sendPasswordReset = async function() {
-    const email = document.getElementById('login-email').value;
+    const email = document.getElementById('login-email').value.trim();
     if (!email) { alert('Voer eerst je e-mailadres in.'); return; }
     try {
       await sendPasswordResetEmail(auth, email);
-      alert('Wachtwoord reset link verstuurd naar ' + email);
+      // Stuur ook via EmailJS
+      await sendPasswordResetMail(email);
+      alert('✅ Wachtwoord reset link verstuurd naar ' + email);
     } catch (e) {
       alert('Fout: ' + e.message);
     }
