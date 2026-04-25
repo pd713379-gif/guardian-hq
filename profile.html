@@ -161,9 +161,10 @@ async function renderProfile(member, gt) {
   document.getElementById('profile-platform').textContent =
     `${platNames[member.membershipType]||'Bungie'} · Destiny 2`;
 
-  const profile = await bget(
-    `/Destiny2/${member.membershipType}/Profile/${member.membershipId}/?components=100,200`
+  const profileRes = await fetch(
+    `/api/profile-guardian?membershipType=${member.membershipType}&membershipId=${member.membershipId}`
   );
+  const profile = await profileRes.json();
 
   const chars = profile?.Response?.characters?.data;
   if (!chars || !Object.keys(chars).length) {
