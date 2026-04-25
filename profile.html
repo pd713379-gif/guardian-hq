@@ -49,7 +49,7 @@
       <div style="text-align:center;padding:80px;color:var(--t3)">
         <div style="font-size:48px;margin-bottom:16px">🔍</div>
         <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px" data-en="Search a Guardian" data-nl="Zoek een Guardian">Search a Guardian</div>
-        <div style="font-size:14px;color:var(--t3);margin-bottom:24px" data-en="Enter a Bungie gamertag in the search bar above (e.g. RemainsNL#6718)" data-nl="Voer een Bungie gamertag in de zoekbalk in (bijv. RemainsNL#6718)">Enter a Bungie gamertag in the search bar above (e.g. RemainsNL#6718)</div>
+        <div style="font-size:14px;color:var(--t3);margin-bottom:24px" data-en="Enter a Bungie gamertag above (e.g. RemainsNL#6718)" data-nl="Voer een gamertag in de zoekbalk in (bijv. RemainsNL#6718)">Enter a Bungie gamertag above (e.g. RemainsNL#6718)</div>
       </div>
     </div>
   </div>
@@ -66,134 +66,134 @@
 <script>
 const API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
 const BUNGIE  = 'https://www.bungie.net/Platform';
-
 let currentLang = localStorage.getItem('ghq_lang') || 'en';
+
 function applyLang() {
   document.documentElement.lang = currentLang;
-  if (document.getElementById('lang-btn')) document.getElementById('lang-btn').textContent = currentLang === 'en' ? '🌐 NL' : '🌐 EN';
-  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = currentLang === 'nl' ? el.dataset.nl : el.dataset.en; });
-  document.getElementById('main-search').placeholder = currentLang === 'nl' ? 'Zoek Guardian (naam#1234)...' : 'Search Guardian (name#1234)...';
+  if (document.getElementById('lang-btn')) document.getElementById('lang-btn').textContent = currentLang==='en'?'🌐 NL':'🌐 EN';
+  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = currentLang==='nl'?el.dataset.nl:el.dataset.en; });
+  document.getElementById('main-search').placeholder = currentLang==='nl'?'Zoek Guardian (naam#1234)...':'Search Guardian (name#1234)...';
 }
-function toggleLang() { currentLang = currentLang==='en'?'nl':'en'; localStorage.setItem('ghq_lang',currentLang); applyLang(); }
+function toggleLang() { currentLang=currentLang==='en'?'nl':'en'; localStorage.setItem('ghq_lang',currentLang); applyLang(); }
 
 async function bget(path) {
-  const r = await fetch(BUNGIE + path, { headers: { 'X-API-Key': API_KEY } });
+  const r = await fetch(BUNGIE+path, { headers:{'X-API-Key':API_KEY} });
   return await r.json();
 }
 
 async function searchGuardian(gt) {
   const content = document.getElementById('profile-content');
-  content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t2)">
-    <div style="font-size:36px;margin-bottom:12px">🔍</div>
-    <div style="font-family:var(--fd);font-size:18px;letter-spacing:1px;text-transform:uppercase">${currentLang==='nl'?'Guardian ophalen...':'Loading Guardian...'}</div>
-  </div>`;
-
   document.getElementById('profile-gamertag').textContent = gt;
 
+  content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t2)">
+    <div style="font-size:36px;margin-bottom:12px">🔍</div>
+    <div style="font-family:var(--fd);font-size:18px;letter-spacing:1px;text-transform:uppercase">
+      ${currentLang==='nl'?'Guardian ophalen...':'Loading Guardian...'}
+    </div>
+  </div>`;
+
   try {
-    // Use ExactSearch endpoint — works with name#code format
-    const nameParts = gt.includes('#') ? gt.split('#') : [gt, null];
-    const displayName = nameParts[0];
-    const displayNameCode = nameParts[1] ? parseInt(nameParts[1]) : null;
+    // Use POST SearchByBungieName via our proxy to avoid CORS
+    // BUT since we don't have backend - use the GET search which works
+    // Encode # as %23 and search all platforms (-1)
+    const encoded = encodeURIComponent(gt);
+    const data = await bget(`/Destiny2/SearchDestinyPlayer/-1/${encoded}/`);
 
-    let membershipData = null;
+    if (!data?.Response?.length) {
+      // Try without the # part (just the name)
+      const name = gt.split('#')[0];
+      const data2 = await bget(`/Destiny2/SearchDestinyPlayer/-1/${encodeURIComponent(name)}/`);
 
-    // Try ExactSearch first (works for name#code)
-    if (displayNameCode) {
-      try {
-        const exact = await fetch(`${BUNGIE}/Destiny2/SearchDestinyPlayerByBungieName/-1/`, {
-          method: 'POST',
-          headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ displayName, displayNameCode })
-        });
-        const exactData = await exact.json();
-        if (exactData?.Response?.length) membershipData = exactData.Response[0];
-      } catch(e) { console.warn('ExactSearch failed:', e); }
-    }
-
-    // Fallback: old search endpoint
-    if (!membershipData) {
-      const search = await bget(`/Destiny2/SearchDestinyPlayer/-1/${encodeURIComponent(gt.replace('#','%23'))}/`);
-      if (search?.Response?.length) membershipData = search.Response[0];
-    }
-
-    if (!membershipData) {
-      content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
-        <div style="font-size:40px;margin-bottom:14px">⚠️</div>
-        <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${currentLang==='nl'?'GUARDIAN NIET GEVONDEN':'GUARDIAN NOT FOUND'}</div>
-        <div style="font-size:13px;color:var(--t3)">${currentLang==='nl'?'Controleer de gamertag en probeer opnieuw.':'Check the gamertag and try again.'}</div>
-      </div>`;
+      if (!data2?.Response?.length) {
+        content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
+          <div style="font-size:40px;margin-bottom:14px">⚠️</div>
+          <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">
+            ${currentLang==='nl'?'GUARDIAN NIET GEVONDEN':'GUARDIAN NOT FOUND'}
+          </div>
+          <div style="font-size:13px;color:var(--t3)">
+            ${currentLang==='nl'?'Probeer alleen de naam zonder #code, bijv: RemainsNL':'Try name only without #code, e.g: RemainsNL'}
+          </div>
+        </div>`;
+        return;
+      }
+      await showProfile(data2.Response[0], gt, content);
       return;
     }
 
-    const platNames = {1:'Xbox',2:'PSN',3:'Steam',254:'BNet'};
-    const clsNames  = {0:'Titan',1:'Hunter',2:'Warlock'};
-    const clsIcons  = {0:'🛡️',1:'🗡️',2:'📚'};
-    const clsBadge  = {0:'b-titan',1:'b-hunter',2:'b-warlock'};
-
-    document.getElementById('profile-platform').textContent = `${platNames[membershipData.membershipType]||'Bungie'} · Destiny 2`;
-
-    const profile = await bget(`/Destiny2/${membershipData.membershipType}/Profile/${membershipData.membershipId}/?components=100,200`);
-    const chars = profile?.Response?.characters?.data;
-
-    if (!chars) {
-      content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">${currentLang==='nl'?'Profiel is privé of heeft geen data.':'Profile is private or has no data.'}</div>`;
-      return;
-    }
-
-    // Max light
-    const maxLight = Math.max(...Object.values(chars).map(c => c.light || 0));
-    document.getElementById('profile-power').textContent = maxLight || '—';
-
-    // Class badges
-    const badges = [...new Set(Object.values(chars).map(c => c.classType))];
-    document.getElementById('profile-badges').innerHTML = badges.map(b =>
-      `<span class="cbadge ${clsBadge[b]||''}">${clsNames[b]||'Guardian'}</span>`).join('');
-
-    // Build content
-    let html = `<div class="stats-ov">
-      <div class="stcard hl"><div class="stcard-l">${currentLang==='nl'?'Gamertag':'Gamertag'}</div><div class="stcard-v" style="font-size:16px">${gt}</div></div>
-      <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Platform':'Platform'}</div><div class="stcard-v" style="font-size:16px">${platNames[membershipData.membershipType]||'Bungie'}</div></div>
-      <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Characters':'Characters'}</div><div class="stcard-v">${Object.keys(chars).length}</div></div>
-      <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Max Light':'Max Light'}</div><div class="stcard-v" style="color:var(--gold)">${maxLight}</div></div>
-    </div>`;
-
-    html += `<div class="tbl-wrap" style="margin-top:20px">
-      <div class="tbl-head"><span class="tbl-title">⚔️ ${currentLang==='nl'?'Characters':'Characters'}</span></div>
-      <table><thead><tr>
-        <th>${currentLang==='nl'?'Class':'Class'}</th>
-        <th>${currentLang==='nl'?'Light Level':'Light Level'}</th>
-        <th>${currentLang==='nl'?'Race':'Race'}</th>
-        <th>${currentLang==='nl'?'Speeltijd':'Playtime'}</th>
-        <th>${currentLang==='nl'?'Laatste login':'Last played'}</th>
-      </tr></thead><tbody>`;
-
-    Object.values(chars).sort((a,b) => (b.light||0)-(a.light||0)).forEach(c => {
-      const race = c.raceType===0?(currentLang==='nl'?'Mens':'Human'):c.raceType===1?'Awoken':'Exo';
-      const hrs  = Math.floor((c.minutesPlayedTotal||0)/60);
-      const last = c.dateLastPlayed ? new Date(c.dateLastPlayed).toLocaleDateString(currentLang==='nl'?'nl-NL':'en-US') : '—';
-      html += `<tr>
-        <td><div class="iname">
-          <div class="iico" style="background:rgba(79,195,247,.1)">${clsIcons[c.classType]||'👤'}</div>
-          <div><div class="inm">${clsNames[c.classType]||'Guardian'}</div><div class="ityp">${race}</div></div>
-        </div></td>
-        <td><span style="font-family:var(--fd);font-size:22px;font-weight:700;color:var(--gold)">${c.light||'?'}</span></td>
-        <td>${race}</td>
-        <td>${hrs} ${currentLang==='nl'?'uur':'hrs'}</td>
-        <td style="font-size:12px;color:var(--t3)">${last}</td>
-      </tr>`;
-    });
-    html += '</tbody></table></div>';
-    content.innerHTML = html;
+    await showProfile(data.Response[0], gt, content);
 
   } catch(err) {
-    console.error('Profile error:', err);
+    console.error(err);
     content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
       <div style="font-size:40px;margin-bottom:14px">❌</div>
-      <div style="font-family:var(--fd);font-size:18px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${currentLang==='nl'?'Fout bij laden':'Error loading'}</div>
+      <div style="font-family:var(--fd);font-size:18px;text-transform:uppercase;margin-bottom:8px">
+        ${currentLang==='nl'?'Verbindingsfout':'Connection Error'}
+      </div>
       <div style="font-size:13px;color:var(--t3)">${err.message}</div>
     </div>`;
   }
+}
+
+async function showProfile(m, gt, content) {
+  const platNames = {1:'Xbox',2:'PSN',3:'Steam',254:'BNet'};
+  const clsNames  = {0:'Titan',1:'Hunter',2:'Warlock'};
+  const clsIcons  = {0:'🛡️',1:'🗡️',2:'📚'};
+  const clsBadge  = {0:'b-titan',1:'b-hunter',2:'b-warlock'};
+
+  document.getElementById('profile-platform').textContent = `${platNames[m.membershipType]||'Bungie'} · Destiny 2`;
+
+  const profile = await bget(`/Destiny2/${m.membershipType}/Profile/${m.membershipId}/?components=100,200`);
+  const chars = profile?.Response?.characters?.data;
+
+  if (!chars) {
+    content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
+      ${currentLang==='nl'?'Profiel is privé of heeft geen data.':'Profile is private or has no data.'}
+    </div>`;
+    return;
+  }
+
+  const maxLight = Math.max(...Object.values(chars).map(c => c.light||0));
+  document.getElementById('profile-power').textContent = maxLight||'—';
+
+  const badges = [...new Set(Object.values(chars).map(c=>c.classType))];
+  document.getElementById('profile-badges').innerHTML = badges.map(b =>
+    `<span class="cbadge ${clsBadge[b]||''}">${clsNames[b]||'Guardian'}</span>`).join('');
+
+  let html = `<div class="stats-ov">
+    <div class="stcard hl"><div class="stcard-l">Gamertag</div><div class="stcard-v" style="font-size:15px">${gt}</div></div>
+    <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Platform':'Platform'}</div><div class="stcard-v" style="font-size:15px">${platNames[m.membershipType]||'Bungie'}</div></div>
+    <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Characters':'Characters'}</div><div class="stcard-v">${Object.keys(chars).length}</div></div>
+    <div class="stcard hl"><div class="stcard-l">${currentLang==='nl'?'Max Light':'Max Light'}</div><div class="stcard-v">${maxLight}</div></div>
+  </div>
+
+  <div class="tbl-wrap" style="margin-top:20px">
+    <div class="tbl-head"><span class="tbl-title">⚔️ Characters</span></div>
+    <table><thead><tr>
+      <th>Class</th>
+      <th>Light Level</th>
+      <th>Race</th>
+      <th>${currentLang==='nl'?'Speeltijd':'Playtime'}</th>
+      <th>${currentLang==='nl'?'Laatste login':'Last played'}</th>
+    </tr></thead><tbody>`;
+
+  Object.values(chars).sort((a,b)=>(b.light||0)-(a.light||0)).forEach(c => {
+    const race = c.raceType===0?(currentLang==='nl'?'Mens':'Human'):c.raceType===1?'Awoken':'Exo';
+    const hrs  = Math.floor((c.minutesPlayedTotal||0)/60);
+    const last = c.dateLastPlayed ? new Date(c.dateLastPlayed).toLocaleDateString(currentLang==='nl'?'nl-NL':'en-US') : '—';
+    html += `<tr>
+      <td><div class="iname">
+        <div class="iico" style="background:rgba(79,195,247,.1)">${clsIcons[c.classType]||'👤'}</div>
+        <div><div class="inm">${clsNames[c.classType]||'Guardian'}</div><div class="ityp">${race}</div></div>
+      </div></td>
+      <td><span style="font-family:var(--fd);font-size:22px;font-weight:700;color:var(--gold)">${c.light||'?'}</span></td>
+      <td>${race}</td>
+      <td>${hrs} ${currentLang==='nl'?'uur':'hrs'}</td>
+      <td style="font-size:12px;color:var(--t3)">${last}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  content.innerHTML = html;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -201,26 +201,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const inp = document.getElementById('main-search');
   inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && inp.value.trim()) searchGuardian(inp.value.trim());
+    if (e.key==='Enter' && inp.value.trim()) searchGuardian(inp.value.trim());
   });
 
-  // Check URL params
   const params = new URLSearchParams(location.search);
   const gt = params.get('gt');
-  if (gt) { inp.value = gt; searchGuardian(gt); }
+  if (gt) { inp.value = gt; searchGuardian(gt); return; }
 
-  // Check logged in user's gamertag
-  const user = sessionStorage.getItem('ghq_user');
-  if (user && !gt) {
-    try {
-      const u = JSON.parse(user);
-      if (u.gamertag) { inp.value = u.gamertag; searchGuardian(u.gamertag); }
-    } catch {}
-  }
+  // Auto load logged in user
+  try {
+    const u = JSON.parse(sessionStorage.getItem('ghq_user')||'{}');
+    if (u?.gamertag) { inp.value = u.gamertag; searchGuardian(u.gamertag); }
+  } catch {}
 });
-</script>
-<script>
-let currentLang = localStorage.getItem('ghq_lang') || 'en';
 </script>
 <script src="js/app.js"></script>
 </body>
