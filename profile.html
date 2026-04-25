@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Guardian Profiel – GuardianHQ</title>
+<title>Guardian Profile – GuardianHQ</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -10,36 +10,35 @@
   <div class="nav-inner">
     <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
     <div class="nav-links">
-      <a href="index.html" class="nav-a">Home</a>
-      <a href="profile.html" class="nav-a active">Profiel</a>
-      <a href="weapons.html" class="nav-a">Wapens</a>
-      <a href="seasonal.html" class="nav-a">Seizoen</a>
-      <a href="raids.html" class="nav-a">Raids</a>
-      <a href="contact.html" class="nav-a">Contact</a>
+      <a href="index.html" class="nav-a" data-en="Home" data-nl="Home">Home</a>
+      <a href="profile.html" class="nav-a active" data-en="Profile" data-nl="Profiel">Profile</a>
+      <a href="destiny.html" class="nav-a" data-en="Destiny 2" data-nl="Destiny 2">Destiny 2</a>
+      <a href="weapons.html" class="nav-a" data-en="Weapons" data-nl="Wapens">Weapons</a>
+      <a href="seasonal.html" class="nav-a" data-en="Season" data-nl="Seizoen">Season</a>
+      <a href="raids.html" class="nav-a" data-en="Raids" data-nl="Raids">Raids</a>
+      <a href="contact.html" class="nav-a" data-en="Contact" data-nl="Contact">Contact</a>
     </div>
     <div class="nav-search">
       <span>🔍</span>
-      <input id="main-search" placeholder="Zoek Guardian..." type="text">
+      <input id="main-search" placeholder="Search Guardian (name#1234)..." type="text">
     </div>
-    <div class="nav-btns" id="nav-btns"></div>
+    <div class="nav-btns" id="nav-btns">
+      <button class="btn btn-out" id="lang-btn" onclick="toggleLang()" style="min-width:42px">🌐 NL</button>
+    </div>
   </div>
 </nav>
 
 <div class="prof-header">
   <div class="prof-header-in">
-    <div class="prof-av">🗡️</div>
+    <div class="prof-av" id="prof-av">👤</div>
     <div>
       <div class="prof-nm" id="profile-gamertag">Guardian</div>
-      <div class="prof-plat">Bungie.net · Destiny 2</div>
-      <div class="prof-badges">
-        <span class="cbadge b-hunter">Hunter</span>
-        <span class="cbadge b-warlock">Warlock</span>
-        <span class="cbadge b-titan">Titan</span>
-      </div>
+      <div class="prof-plat" id="profile-platform">Bungie.net · Destiny 2</div>
+      <div class="prof-badges" id="profile-badges"></div>
     </div>
     <div class="prof-meta">
       <div class="prof-pow" id="profile-power">—</div>
-      <div class="prof-pow-l">Max Light Level</div>
+      <div class="prof-pow-l" data-en="Max Light Level" data-nl="Max Light Level">Max Light Level</div>
     </div>
   </div>
 </div>
@@ -49,9 +48,8 @@
     <div id="profile-content">
       <div style="text-align:center;padding:80px;color:var(--t3)">
         <div style="font-size:48px;margin-bottom:16px">🔍</div>
-        <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Zoek een Guardian</div>
-        <div style="font-size:14px;color:var(--t3);margin-bottom:24px">Voer een Bungie gamertag in de zoekbalk in, of log in om je eigen profiel te zien.</div>
-        <a href="login.html" class="btn btn-p">🔑 Inloggen</a>
+        <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px" data-en="Search a Guardian" data-nl="Zoek een Guardian">Search a Guardian</div>
+        <div style="font-size:14px;color:var(--t3);margin-bottom:24px" data-en="Enter a Bungie gamertag in the search bar above (e.g. RemainsNL#6718)" data-nl="Voer een Bungie gamertag in de zoekbalk in (bijv. RemainsNL#6718)">Enter a Bungie gamertag in the search bar above (e.g. RemainsNL#6718)</div>
       </div>
     </div>
   </div>
@@ -60,29 +58,170 @@
 <footer>
   <div class="foot-in">
     <div class="foot-bot">
-      <div class="foot-copy">© 2025 GuardianHQ · Niet gelieerd aan Bungie, Inc.</div>
+      <div class="foot-copy">© 2026 GuardianHQ · Not affiliated with Bungie, Inc.</div>
     </div>
   </div>
 </footer>
 
-<script src="js/app.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  if (!Auth.isLoggedIn()) {
-    document.getElementById('profile-content').innerHTML = `
-      <div style="text-align:center;padding:80px;color:var(--t3)">
-        <div style="font-size:48px;margin-bottom:16px">🔒</div>
-        <div style="font-family:var(--fd);font-size:26px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Login Vereist</div>
-        <div style="font-size:14px;color:var(--t3);margin-bottom:24px">Je hebt een account nodig om Guardian-profielen te bekijken.</div>
-        <div style="display:flex;gap:10px;justify-content:center">
-          <a href="login.html" class="btn btn-p">🔑 Inloggen</a>
-          <a href="register.html" class="btn btn-g">🚀 Account Aanmaken</a>
-        </div>
+const API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
+const BUNGIE  = 'https://www.bungie.net/Platform';
+
+let currentLang = localStorage.getItem('ghq_lang') || 'en';
+function applyLang() {
+  document.documentElement.lang = currentLang;
+  if (document.getElementById('lang-btn')) document.getElementById('lang-btn').textContent = currentLang === 'en' ? '🌐 NL' : '🌐 EN';
+  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = currentLang === 'nl' ? el.dataset.nl : el.dataset.en; });
+  document.getElementById('main-search').placeholder = currentLang === 'nl' ? 'Zoek Guardian (naam#1234)...' : 'Search Guardian (name#1234)...';
+}
+function toggleLang() { currentLang = currentLang==='en'?'nl':'en'; localStorage.setItem('ghq_lang',currentLang); applyLang(); }
+
+async function bget(path) {
+  const r = await fetch(BUNGIE + path, { headers: { 'X-API-Key': API_KEY } });
+  return await r.json();
+}
+
+async function searchGuardian(gt) {
+  const content = document.getElementById('profile-content');
+  content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t2)">
+    <div style="font-size:36px;margin-bottom:12px">🔍</div>
+    <div style="font-family:var(--fd);font-size:18px;letter-spacing:1px;text-transform:uppercase">${currentLang==='nl'?'Guardian ophalen...':'Loading Guardian...'}</div>
+  </div>`;
+
+  document.getElementById('profile-gamertag').textContent = gt;
+
+  try {
+    // Use ExactSearch endpoint — works with name#code format
+    const nameParts = gt.includes('#') ? gt.split('#') : [gt, null];
+    const displayName = nameParts[0];
+    const displayNameCode = nameParts[1] ? parseInt(nameParts[1]) : null;
+
+    let membershipData = null;
+
+    // Try ExactSearch first (works for name#code)
+    if (displayNameCode) {
+      try {
+        const exact = await fetch(`${BUNGIE}/Destiny2/SearchDestinyPlayerByBungieName/-1/`, {
+          method: 'POST',
+          headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ displayName, displayNameCode })
+        });
+        const exactData = await exact.json();
+        if (exactData?.Response?.length) membershipData = exactData.Response[0];
+      } catch(e) { console.warn('ExactSearch failed:', e); }
+    }
+
+    // Fallback: old search endpoint
+    if (!membershipData) {
+      const search = await bget(`/Destiny2/SearchDestinyPlayer/-1/${encodeURIComponent(gt.replace('#','%23'))}/`);
+      if (search?.Response?.length) membershipData = search.Response[0];
+    }
+
+    if (!membershipData) {
+      content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
+        <div style="font-size:40px;margin-bottom:14px">⚠️</div>
+        <div style="font-family:var(--fd);font-size:22px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${currentLang==='nl'?'GUARDIAN NIET GEVONDEN':'GUARDIAN NOT FOUND'}</div>
+        <div style="font-size:13px;color:var(--t3)">${currentLang==='nl'?'Controleer de gamertag en probeer opnieuw.':'Check the gamertag and try again.'}</div>
       </div>`;
-    return;
+      return;
+    }
+
+    const platNames = {1:'Xbox',2:'PSN',3:'Steam',254:'BNet'};
+    const clsNames  = {0:'Titan',1:'Hunter',2:'Warlock'};
+    const clsIcons  = {0:'🛡️',1:'🗡️',2:'📚'};
+    const clsBadge  = {0:'b-titan',1:'b-hunter',2:'b-warlock'};
+
+    document.getElementById('profile-platform').textContent = `${platNames[membershipData.membershipType]||'Bungie'} · Destiny 2`;
+
+    const profile = await bget(`/Destiny2/${membershipData.membershipType}/Profile/${membershipData.membershipId}/?components=100,200`);
+    const chars = profile?.Response?.characters?.data;
+
+    if (!chars) {
+      content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">${currentLang==='nl'?'Profiel is privé of heeft geen data.':'Profile is private or has no data.'}</div>`;
+      return;
+    }
+
+    // Max light
+    const maxLight = Math.max(...Object.values(chars).map(c => c.light || 0));
+    document.getElementById('profile-power').textContent = maxLight || '—';
+
+    // Class badges
+    const badges = [...new Set(Object.values(chars).map(c => c.classType))];
+    document.getElementById('profile-badges').innerHTML = badges.map(b =>
+      `<span class="cbadge ${clsBadge[b]||''}">${clsNames[b]||'Guardian'}</span>`).join('');
+
+    // Build content
+    let html = `<div class="stats-ov">
+      <div class="stcard hl"><div class="stcard-l">${currentLang==='nl'?'Gamertag':'Gamertag'}</div><div class="stcard-v" style="font-size:16px">${gt}</div></div>
+      <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Platform':'Platform'}</div><div class="stcard-v" style="font-size:16px">${platNames[membershipData.membershipType]||'Bungie'}</div></div>
+      <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Characters':'Characters'}</div><div class="stcard-v">${Object.keys(chars).length}</div></div>
+      <div class="stcard"><div class="stcard-l">${currentLang==='nl'?'Max Light':'Max Light'}</div><div class="stcard-v" style="color:var(--gold)">${maxLight}</div></div>
+    </div>`;
+
+    html += `<div class="tbl-wrap" style="margin-top:20px">
+      <div class="tbl-head"><span class="tbl-title">⚔️ ${currentLang==='nl'?'Characters':'Characters'}</span></div>
+      <table><thead><tr>
+        <th>${currentLang==='nl'?'Class':'Class'}</th>
+        <th>${currentLang==='nl'?'Light Level':'Light Level'}</th>
+        <th>${currentLang==='nl'?'Race':'Race'}</th>
+        <th>${currentLang==='nl'?'Speeltijd':'Playtime'}</th>
+        <th>${currentLang==='nl'?'Laatste login':'Last played'}</th>
+      </tr></thead><tbody>`;
+
+    Object.values(chars).sort((a,b) => (b.light||0)-(a.light||0)).forEach(c => {
+      const race = c.raceType===0?(currentLang==='nl'?'Mens':'Human'):c.raceType===1?'Awoken':'Exo';
+      const hrs  = Math.floor((c.minutesPlayedTotal||0)/60);
+      const last = c.dateLastPlayed ? new Date(c.dateLastPlayed).toLocaleDateString(currentLang==='nl'?'nl-NL':'en-US') : '—';
+      html += `<tr>
+        <td><div class="iname">
+          <div class="iico" style="background:rgba(79,195,247,.1)">${clsIcons[c.classType]||'👤'}</div>
+          <div><div class="inm">${clsNames[c.classType]||'Guardian'}</div><div class="ityp">${race}</div></div>
+        </div></td>
+        <td><span style="font-family:var(--fd);font-size:22px;font-weight:700;color:var(--gold)">${c.light||'?'}</span></td>
+        <td>${race}</td>
+        <td>${hrs} ${currentLang==='nl'?'uur':'hrs'}</td>
+        <td style="font-size:12px;color:var(--t3)">${last}</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    content.innerHTML = html;
+
+  } catch(err) {
+    console.error('Profile error:', err);
+    content.innerHTML = `<div style="text-align:center;padding:60px;color:var(--t3)">
+      <div style="font-size:40px;margin-bottom:14px">❌</div>
+      <div style="font-family:var(--fd);font-size:18px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">${currentLang==='nl'?'Fout bij laden':'Error loading'}</div>
+      <div style="font-size:13px;color:var(--t3)">${err.message}</div>
+    </div>`;
   }
-  initProfile();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyLang();
+
+  const inp = document.getElementById('main-search');
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && inp.value.trim()) searchGuardian(inp.value.trim());
+  });
+
+  // Check URL params
+  const params = new URLSearchParams(location.search);
+  const gt = params.get('gt');
+  if (gt) { inp.value = gt; searchGuardian(gt); }
+
+  // Check logged in user's gamertag
+  const user = sessionStorage.getItem('ghq_user');
+  if (user && !gt) {
+    try {
+      const u = JSON.parse(user);
+      if (u.gamertag) { inp.value = u.gamertag; searchGuardian(u.gamertag); }
+    } catch {}
+  }
 });
 </script>
+<script>
+let currentLang = localStorage.getItem('ghq_lang') || 'en';
+</script>
+<script src="js/app.js"></script>
 </body>
 </html>
