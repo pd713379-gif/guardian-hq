@@ -1,5 +1,5 @@
 // GuardianHQ - Main JS
-const API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
+const BUNGIE_API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
 const BUNGIE_ROOT = 'https://www.bungie.net/Platform';
 
 // ===== AUTH (Firebase sessionStorage) =====
@@ -84,7 +84,7 @@ function initSearch() {
 // ===== BUNGIE API =====
 async function bungieGet(path) {
   try {
-    const r = await fetch(BUNGIE_ROOT + path, { headers: { 'X-API-Key': API_KEY } });
+    const r = await fetch(BUNGIE_ROOT + path, { headers: { 'X-API-Key': BUNGIE_API_KEY } });
     return await r.json();
   } catch(e) { console.warn('Bungie API:', e); return null; }
 }
