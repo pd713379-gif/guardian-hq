@@ -5,57 +5,114 @@
 <title>Destiny 2 – GuardianHQ</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
-.d2-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
-.d2-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px}
-.live-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.live-card-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.live-card-title{font-family:var(--fd);font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;flex:1}
-.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}
-.live-body{padding:18px}
+/* ===== GLASSY DESIGN ===== */
+:root {
+  --glass-bg: rgba(19,22,30,0.7);
+  --glass-border: rgba(79,195,247,0.12);
+  --glass-blur: blur(16px);
+}
+
+.d2-wrap { max-width:1400px; margin:0 auto; padding:0 20px 60px; }
+
+/* GLASS CARDS */
+.g-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color .3s;
+}
+.g-card:hover { border-color: rgba(79,195,247,0.25); }
+
+.g-card-head {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(79,195,247,0.03);
+}
+.g-card-title {
+  font-family: var(--fd);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex: 1;
+}
+.g-card-body { padding: 16px; }
+
+/* GRID */
+.d2-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.d2-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-bottom: 18px; }
+.d2-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-bottom: 18px; }
+
+/* LIVE DOT */
+.ldot { width:8px; height:8px; border-radius:50%; animation:pulse 2s infinite; flex-shrink:0; }
+.ldot-green { background:var(--green); }
+.ldot-red { background:var(--red); }
+.ldot-gray { background:var(--t3); }
+
 /* NEWS */
-.news-feed-badge{background:#c0392b;color:#fff;font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:100px}
-.news-section-label{font-family:var(--fu);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t3);padding:8px 0 4px;border-bottom:1px solid var(--border);margin-bottom:6px}
-.news-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(30,34,53,.5);text-decoration:none;transition:.2s;cursor:pointer}
-.news-item:last-child{border-bottom:none}
-.news-item:hover .news-title{color:var(--blue)}
-.news-date{font-size:11px;color:var(--t3);min-width:70px;flex-shrink:0;padding-top:2px}
-.news-title{font-size:13px;color:var(--t1);line-height:1.4;font-weight:500;transition:.2s}
-.news-dot{width:6px;height:6px;background:var(--blue);border-radius:50%;flex-shrink:0;margin-top:5px}
-.shimmer{height:36px;background:linear-gradient(90deg,var(--bg2) 25%,var(--cardh) 50%,var(--bg2) 75%);background-size:200% 100%;animation:sh 1.5s infinite;border-radius:6px;margin-bottom:8px}
-@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
-/* STATS */
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(30,34,53,.5)}
-.stat-row:last-child{border-bottom:none}
-.stat-row-label{font-size:13px;color:var(--t2)}
-.stat-row-val{font-family:var(--fu);font-size:14px;font-weight:700}
+.news-badge { background:#c0392b; color:#fff; font-family:var(--fu); font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:100px; }
+.news-item { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid rgba(30,34,53,.4); text-decoration:none; cursor:pointer; transition:.15s; }
+.news-item:last-child { border-bottom:none; }
+.news-item:hover .news-t { color:var(--blue); }
+.news-dot { width:5px; height:5px; background:var(--blue); border-radius:50%; flex-shrink:0; margin-top:5px; }
+.news-date { font-size:11px; color:var(--t3); min-width:80px; flex-shrink:0; }
+.news-t { font-size:13px; color:var(--t1); line-height:1.4; transition:color .15s; }
+
+/* STAT ROWS */
+.srow { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(30,34,53,.4); }
+.srow:last-child { border-bottom:none; }
+.srow-l { font-size:13px; color:var(--t2); }
+.srow-v { font-family:var(--fu); font-size:14px; font-weight:700; }
+
 /* TIMER */
-.timer-wrap{display:flex;gap:8px;justify-content:center;margin:14px 0}
-.tblock{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;text-align:center;min-width:54px}
-.tnum{font-family:var(--fd);font-size:26px;font-weight:800;color:var(--blue);line-height:1}
-.tlbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-/* POWER BARS */
-.pband{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.pband-l{font-size:12px;color:var(--t2);min-width:95px}
-.pband-b{flex:1;height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
-.pband-f{height:100%;border-radius:3px}
-.pband-v{font-family:var(--fd);font-size:15px;font-weight:700;min-width:38px;text-align:right}
-/* ACTIVITIES */
-.act-item{display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
-.act-ico{width:40px;height:40px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.act-name{font-family:var(--fu);font-size:13px;font-weight:600}
-.act-det{font-size:11px;color:var(--t3);margin-top:2px}
-.act-badge{font-family:var(--fu);font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:1px;margin-left:auto;flex-shrink:0}
+.timer-blocks { display:flex; gap:8px; justify-content:center; margin:12px 0; }
+.tblock { background:rgba(15,17,23,0.8); border:1px solid var(--glass-border); border-radius:8px; padding:10px 13px; min-width:52px; text-align:center; }
+.tnum { font-family:var(--fd); font-size:24px; font-weight:800; color:var(--blue); line-height:1; }
+.tlbl { font-size:9px; color:var(--t3); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+
+/* POWER BANDS */
+.pband { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+.pband-l { font-size:12px; color:var(--t2); min-width:90px; }
+.pband-b { flex:1; height:5px; background:rgba(15,17,23,.8); border-radius:3px; overflow:hidden; }
+.pband-f { height:100%; border-radius:3px; }
+.pband-v { font-family:var(--fd); font-size:14px; font-weight:700; min-width:36px; text-align:right; }
+
+/* ACTIVITIES with real images */
+.act-card { position:relative; border-radius:10px; overflow:hidden; border:1px solid var(--glass-border); transition:.2s; height:80px; display:flex; align-items:center; gap:12px; padding:0 14px; background:rgba(15,17,23,.7); }
+.act-card:hover { border-color:rgba(79,195,247,.3); }
+.act-card-bg { position:absolute; inset:0; background-size:cover; background-position:center; opacity:.18; }
+.act-card-ico { width:44px; height:44px; object-fit:contain; position:relative; z-index:1; border-radius:8px; flex-shrink:0; }
+.act-card-ico-fallback { width:44px; height:44px; display:flex; align-items:center; justify-content:center; font-size:20px; background:rgba(79,195,247,.1); border-radius:8px; flex-shrink:0; position:relative; z-index:1; }
+.act-info { flex:1; position:relative; z-index:1; }
+.act-name { font-family:var(--fu); font-size:13px; font-weight:600; }
+.act-det { font-size:11px; color:var(--t3); margin-top:2px; }
+.act-badge { font-family:var(--fu); font-size:10px; font-weight:600; padding:2px 9px; border-radius:100px; text-transform:uppercase; letter-spacing:1px; position:relative; z-index:1; flex-shrink:0; }
+
 /* XUR */
-.xur-item{display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg2);border-radius:6px;margin-bottom:6px}
-.xur-ico{width:36px;height:36px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.xur-name{font-size:13px;font-weight:500}
-.xur-type{font-size:11px;color:var(--t3)}
-/* SEASON PROG */
-.sbar-wrap{margin:10px 0}
-.sbar-row{display:flex;justify-content:space-between;font-size:12px;color:var(--t2);margin-bottom:5px}
-.sbar{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
-.sbar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:3px}
-@media(max-width:900px){.d2-grid{grid-template-columns:1fr}.d2-grid-3{grid-template-columns:1fr}}
+.xur-item { display:flex; align-items:center; gap:10px; padding:8px; background:rgba(15,17,23,.6); border:1px solid var(--glass-border); border-radius:7px; margin-bottom:6px; }
+.xur-ico { width:36px; height:36px; object-fit:cover; border-radius:5px; flex-shrink:0; }
+.xur-ico-fb { width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:16px; background:rgba(79,195,247,.1); border-radius:5px; flex-shrink:0; }
+.xur-name { font-size:13px; font-weight:500; }
+.xur-type { font-size:11px; color:var(--t3); }
+
+/* SEASON BAR */
+.sbar-row { display:flex; justify-content:space-between; font-size:12px; color:var(--t2); margin-bottom:5px; }
+.sbar { height:5px; background:rgba(15,17,23,.8); border-radius:3px; overflow:hidden; margin-bottom:8px; }
+.sbar-fill { height:100%; background:linear-gradient(90deg,var(--purple),var(--blue)); border-radius:3px; }
+
+/* SHIMMER */
+.shimmer { background:linear-gradient(90deg,rgba(19,22,30,.8) 25%,rgba(26,30,42,.9) 50%,rgba(19,22,30,.8) 75%); background-size:200% 100%; animation:sh 1.5s infinite; border-radius:8px; }
+@keyframes sh { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+@media(max-width:900px) {
+  .d2-grid,.d2-grid-3,.d2-grid-4 { grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
@@ -85,145 +142,147 @@
   </div>
 </div>
 
-<div class="sec">
-  <div class="sec-in">
+<div class="d2-wrap">
 
-    <!-- ROW 1: NEWS + STATUS/TIMER -->
-    <div class="d2-grid">
+  <!-- ROW 1: NEWS + STATUS -->
+  <div class="d2-grid">
 
-      <!-- NEWS FEED -->
-      <div class="live-card">
-        <div class="live-card-head">
-          <div class="live-dot"></div>
-          <span class="live-card-title" data-en="Live News" data-nl="Live Nieuws">Live News</span>
-          <span class="news-feed-badge">● BUNGIE FEED</span>
-        </div>
-        <div class="live-body" id="news-body">
-          <div class="shimmer"></div><div class="shimmer"></div><div class="shimmer"></div><div class="shimmer"></div><div class="shimmer"></div>
-        </div>
+    <!-- NEWS -->
+    <div class="g-card">
+      <div class="g-card-head">
+        <div class="ldot ldot-green"></div>
+        <span class="g-card-title" data-en="Live News" data-nl="Live Nieuws">Live News</span>
+        <span class="news-badge">● BUNGIE FEED</span>
       </div>
-
-      <!-- RIGHT: TIMER + STATUS + SEASON -->
-      <div style="display:flex;flex-direction:column;gap:20px">
-
-        <!-- LIVE GAME STATUS -->
-        <div class="live-card">
-          <div class="live-card-head">
-            <div class="live-dot"></div>
-            <span class="live-card-title" data-en="📊 Live Game Status" data-nl="📊 Live Game Status">📊 Live Game Status</span>
-          </div>
-          <div class="live-body">
-            <div class="stat-row">
-              <span class="stat-row-label" data-en="Online Guardians (Steam)" data-nl="Online Guardians (Steam)">Online Guardians (Steam)</span>
-              <span class="stat-row-val" id="online-count" style="color:var(--green)">—</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label" data-en="Server Status" data-nl="Server Status">Server Status</span>
-              <span class="stat-row-val" id="server-status">—</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label" data-en="Season Power Cap" data-nl="Season Power Cap">Season Power Cap</span>
-              <span class="stat-row-val gold" id="pow-cap">—</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label" data-en="Soft Cap" data-nl="Soft Cap">Soft Cap</span>
-              <span class="stat-row-val" style="color:var(--green)" id="soft-cap">—</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label" data-en="Pinnacle Cap" data-nl="Pinnacle Cap">Pinnacle Cap</span>
-              <span class="stat-row-val" style="color:var(--gold)" id="pin-cap">—</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label" data-en="Weekly Reset" data-nl="Wekelijkse Reset">Weekly Reset</span>
-              <span class="stat-row-val" style="color:var(--blue)" id="weekly-txt">—</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label" data-en="Daily Reset" data-nl="Dagelijkse Reset">Daily Reset</span>
-              <span class="stat-row-val" id="daily-txt">—</span>
-            </div>
-            <!-- SEASON PROGRESS -->
-            <div class="sbar-wrap">
-              <div class="sbar-row">
-                <span data-en="Season Progress" data-nl="Seizoen Voortgang">Season Progress</span>
-                <span style="color:var(--purple)" id="season-pct">—</span>
-              </div>
-              <div class="sbar"><div class="sbar-fill" id="season-bar" style="width:0%"></div></div>
-              <div style="font-size:11px;color:var(--t3);margin-top:4px" id="season-dates"></div>
-            </div>
-            <div style="font-size:11px;color:var(--t3);text-align:right;margin-top:6px" id="last-updated"></div>
-          </div>
-        </div>
-
-        <!-- WEEKLY RESET TIMER -->
-        <div class="live-card">
-          <div class="live-card-head">
-            <div class="live-dot"></div>
-            <span class="live-card-title" data-en="⏰ Weekly Reset" data-nl="⏰ Wekelijkse Reset">⏰ Weekly Reset</span>
-          </div>
-          <div class="live-body" style="text-align:center">
-            <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px" data-en="Resets in" data-nl="Reset over">Resets in</div>
-            <div class="timer-wrap">
-              <div class="tblock"><div class="tnum" id="t-d">--</div><div class="tlbl" data-en="Days" data-nl="Dagen">Days</div></div>
-              <div class="tblock"><div class="tnum" id="t-h">--</div><div class="tlbl" data-en="Hours" data-nl="Uren">Hours</div></div>
-              <div class="tblock"><div class="tnum" id="t-m">--</div><div class="tlbl" data-en="Mins" data-nl="Min">Mins</div></div>
-              <div class="tblock"><div class="tnum" id="t-s">--</div><div class="tlbl" data-en="Secs" data-nl="Sec">Secs</div></div>
-            </div>
-          </div>
-        </div>
-
+      <div class="g-card-body" id="news-body">
+        <div class="shimmer" style="height:32px;margin-bottom:8px"></div>
+        <div class="shimmer" style="height:32px;margin-bottom:8px"></div>
+        <div class="shimmer" style="height:32px;margin-bottom:8px"></div>
+        <div class="shimmer" style="height:32px;margin-bottom:8px"></div>
+        <div class="shimmer" style="height:32px"></div>
       </div>
     </div>
 
-    <!-- ROW 2: ACTIVITIES + XUR -->
-    <div class="d2-grid">
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:18px">
 
-      <!-- TODAY'S ACTIVITIES -->
-      <div class="live-card">
-        <div class="live-card-head">
-          <div class="live-dot"></div>
-          <span class="live-card-title" data-en="🎯 Activities Today" data-nl="🎯 Activiteiten Vandaag">🎯 Activities Today</span>
+      <!-- LIVE GAME STATUS -->
+      <div class="g-card">
+        <div class="g-card-head">
+          <div class="ldot ldot-green" id="status-dot"></div>
+          <span class="g-card-title" data-en="📊 Live Game Status" data-nl="📊 Live Game Status">📊 Live Game Status</span>
         </div>
-        <div class="live-body" id="activities-body">
-          <div class="shimmer" style="height:52px"></div>
-          <div class="shimmer" style="height:52px"></div>
-          <div class="shimmer" style="height:52px"></div>
+        <div class="g-card-body">
+          <div class="srow"><span class="srow-l" data-en="Online Guardians (Steam)" data-nl="Online Guardians (Steam)">Online Guardians (Steam)</span><span class="srow-v" style="color:var(--green)" id="online-count">—</span></div>
+          <div class="srow"><span class="srow-l" data-en="Server Status" data-nl="Server Status">Server Status</span><span class="srow-v" id="server-status">—</span></div>
+          <div class="srow"><span class="srow-l" data-en="Season Power Cap" data-nl="Season Power Cap">Season Power Cap</span><span class="srow-v" style="color:var(--gold)" id="pow-cap">—</span></div>
+          <div class="srow"><span class="srow-l" data-en="Soft Cap" data-nl="Soft Cap">Soft Cap</span><span class="srow-v" style="color:var(--green)" id="soft-cap">—</span></div>
+          <div class="srow"><span class="srow-l" data-en="Pinnacle Cap" data-nl="Pinnacle Cap">Pinnacle Cap</span><span class="srow-v" style="color:var(--gold)" id="pin-cap">—</span></div>
+          <div class="srow"><span class="srow-l" data-en="Weekly Reset" data-nl="Wekelijkse Reset">Weekly Reset</span><span class="srow-v" style="color:var(--blue)" id="weekly-txt">—</span></div>
+          <div class="srow"><span class="srow-l" data-en="Daily Reset" data-nl="Dagelijkse Reset">Daily Reset</span><span class="srow-v" id="daily-txt">—</span></div>
+          <div class="sbar-row" style="margin-top:12px">
+            <span data-en="Season Progress" data-nl="Seizoen Voortgang">Season Progress</span>
+            <span style="color:var(--purple)" id="season-pct">—</span>
+          </div>
+          <div class="sbar"><div class="sbar-fill" id="season-bar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--t3)" id="season-dates"></div>
+          <div style="font-size:11px;color:var(--t3);text-align:right;margin-top:6px" id="last-updated"></div>
         </div>
       </div>
 
-      <!-- XUR -->
-      <div class="live-card">
-        <div class="live-card-head">
-          <div class="live-dot" id="xur-dot" style="background:var(--t3)"></div>
-          <span class="live-card-title">👾 <span data-en="Xûr's Inventory" data-nl="Inventaris van Xûr">Xûr's Inventory</span></span>
-          <span id="xur-status-badge" class="act-badge" style="background:rgba(156,107,255,.15);color:var(--purple);border:1px solid rgba(156,107,255,.3)">Friday–Tuesday</span>
+      <!-- WEEKLY RESET TIMER -->
+      <div class="g-card">
+        <div class="g-card-head">
+          <div class="ldot ldot-green"></div>
+          <span class="g-card-title" data-en="⏰ Weekly Reset" data-nl="⏰ Wekelijkse Reset">⏰ Weekly Reset</span>
         </div>
-        <div class="live-body" id="xur-body">
-          <div class="shimmer" style="height:44px"></div>
-          <div class="shimmer" style="height:44px"></div>
-          <div class="shimmer" style="height:44px"></div>
+        <div class="g-card-body" style="text-align:center">
+          <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px" data-en="Resets in" data-nl="Reset over">Resets in</div>
+          <div class="timer-blocks">
+            <div class="tblock"><div class="tnum" id="t-d">--</div><div class="tlbl" data-en="Days" data-nl="Dagen">Days</div></div>
+            <div class="tblock"><div class="tnum" id="t-h">--</div><div class="tlbl" data-en="Hours" data-nl="Uren">Hours</div></div>
+            <div class="tblock"><div class="tnum" id="t-m">--</div><div class="tlbl" data-en="Mins" data-nl="Min">Mins</div></div>
+            <div class="tblock"><div class="tnum" id="t-s">--</div><div class="tlbl" data-en="Secs" data-nl="Sec">Secs</div></div>
+          </div>
         </div>
       </div>
 
     </div>
+  </div>
 
-    <!-- ROW 3: TRIALS + NIGHTFALL + LOST SECTOR -->
-    <div class="d2-grid-3">
-      <div class="live-card">
-        <div class="live-card-head"><span class="live-card-title" style="color:var(--gold)">⚖️ Trials of Osiris</span></div>
-        <div class="live-body" id="trials-body"><div class="shimmer" style="height:130px"></div></div>
+  <!-- ROW 2: ACTIVITIES (4 cols with real images) -->
+  <div class="g-card" style="margin-bottom:18px">
+    <div class="g-card-head">
+      <div class="ldot ldot-green"></div>
+      <span class="g-card-title" data-en="🎯 Activities Today" data-nl="🎯 Activiteiten Vandaag">🎯 Activities Today</span>
+    </div>
+    <div class="g-card-body">
+      <div class="d2-grid-4" id="activities-grid" style="margin-bottom:0">
+        <div class="shimmer" style="height:80px"></div>
+        <div class="shimmer" style="height:80px"></div>
+        <div class="shimmer" style="height:80px"></div>
+        <div class="shimmer" style="height:80px"></div>
       </div>
-      <div class="live-card">
-        <div class="live-card-head"><span class="live-card-title">🌙 Nightfall</span></div>
-        <div class="live-body" id="nightfall-body"><div class="shimmer" style="height:130px"></div></div>
+    </div>
+  </div>
+
+  <!-- ROW 3: XUR + TRIALS + NIGHTFALL -->
+  <div class="d2-grid-3">
+
+    <!-- XUR -->
+    <div class="g-card">
+      <div class="g-card-head">
+        <div class="ldot" id="xur-dot" style="background:var(--t3)"></div>
+        <span class="g-card-title">👾 Xûr</span>
+        <span id="xur-badge" class="act-badge" style="background:rgba(156,107,255,.15);color:var(--purple);border:1px solid rgba(156,107,255,.3)">Fri–Tue</span>
       </div>
-      <div class="live-card">
-        <div class="live-card-head"><span class="live-card-title" data-en="🗺️ Lost Sector" data-nl="🗺️ Lost Sector">🗺️ Lost Sector</span></div>
-        <div class="live-body" id="lostsector-body"><div class="shimmer" style="height:130px"></div></div>
+      <div class="g-card-body" id="xur-body">
+        <div class="shimmer" style="height:44px;margin-bottom:6px"></div>
+        <div class="shimmer" style="height:44px;margin-bottom:6px"></div>
+        <div class="shimmer" style="height:44px"></div>
+      </div>
+    </div>
+
+    <!-- TRIALS -->
+    <div class="g-card">
+      <div class="g-card-head">
+        <div class="ldot ldot-green"></div>
+        <span class="g-card-title" style="color:var(--gold)">⚖️ Trials of Osiris</span>
+      </div>
+      <div class="g-card-body">
+        <div class="srow"><span class="srow-l">Map</span><span class="srow-v" style="color:var(--gold)">Burnout</span></div>
+        <div class="srow"><span class="srow-l" data-en="Mode" data-nl="Modus">Mode</span><span class="srow-v">Elimination 3v3</span></div>
+        <div class="srow"><span class="srow-l" data-en="Status" data-nl="Status">Status</span><span class="srow-v" style="color:var(--green)">● Active</span></div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--glass-border)">
+          <div style="font-family:var(--fu);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:6px" data-en="Rewards" data-nl="Beloningen">Rewards</div>
+          ${[['3 Wins','Armor','var(--t2)'],['5 Wins','The Messenger','var(--purple)'],['Flawless','⭐ Adept','var(--gold)']].map(([w,n,c])=>`
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span style="color:var(--t2)">${w}</span><span style="color:${c}">${n}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- NIGHTFALL -->
+    <div class="g-card">
+      <div class="g-card-head">
+        <div class="ldot ldot-green"></div>
+        <span class="g-card-title">🌙 Nightfall</span>
+      </div>
+      <div class="g-card-body">
+        <div class="srow"><span class="srow-l">Strike</span><span class="srow-v" style="color:var(--blue)">The Arms Dealer</span></div>
+        <div class="srow"><span class="srow-l" data-en="Difficulty" data-nl="Moeilijkheid">Difficulty</span><span class="srow-v">Grandmaster</span></div>
+        <div class="srow"><span class="srow-l" data-en="Reward" data-nl="Beloning">Reward</span><span class="srow-v" style="color:var(--gold)">Adept Weapon</span></div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--glass-border)">
+          <div style="font-family:var(--fu);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:6px" data-en="Modifiers" data-nl="Modifiers">Modifiers</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            ${['Extinguish','Champions','Arc Shields'].map(m=>`<span style="background:rgba(239,83,80,.12);color:var(--red);border:1px solid rgba(239,83,80,.25);font-family:var(--fu);font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px">${m}</span>`).join('')}
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
-</div>
+
+</div><!-- end d2-wrap -->
 
 <footer>
   <div class="foot-in">
@@ -234,9 +293,6 @@
 </footer>
 
 <script>
-const API_KEY = '9ad034ae0ea641e6886c7c33f3911093';
-const BUNGIE  = 'https://www.bungie.net/Platform';
-
 // ===== TAAL =====
 let currentLang = localStorage.getItem('ghq_lang') || 'en';
 function applyLang() {
@@ -253,291 +309,274 @@ function toggleLang() {
   loadAll();
 }
 
-// ===== BUNGIE API =====
-async function bget(path) {
-  try {
-    const r = await fetch(BUNGIE + path, { headers: { 'X-API-Key': API_KEY } });
-    return await r.json();
-  } catch { return null; }
-}
-
-// ===== NEWS via RSS proxy =====
+// ===== NEWS via RSS2JSON =====
 async function loadNews() {
   const body = document.getElementById('news-body');
   try {
-    // Use rss2json proxy to convert Bungie RSS to JSON
-    const rss = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.bungie.net/en/rss/News');
-    const data = await rss.json();
+    const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.bungie.net/en/rss/News&count=8');
+    const data = await r.json();
     if (!data?.items?.length) throw new Error();
-
-    const items = data.items.slice(0, 8);
-    body.innerHTML = `<div class="news-section-label" data-en="► LIVE NEWS" data-nl="► LIVE NIEUWS">► LIVE NEWS</div>` +
-      items.map(item => {
-        const d = new Date(item.pubDate);
-        const now = new Date();
-        const diff = Math.floor((now - d) / 86400000);
-        let dateStr;
-        if (diff === 0) dateStr = currentLang === 'nl' ? 'Vandaag' : 'Today';
-        else if (diff === 1) dateStr = currentLang === 'nl' ? 'Gisteren' : 'Yesterday';
-        else if (diff < 7) dateStr = currentLang === 'nl' ? `${diff} dagen geleden` : `${diff} days ago`;
-        else dateStr = d.toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day:'numeric', month:'short' });
-
-        return `<a class="news-item" href="${item.link}" target="_blank">
-          <div class="news-dot"></div>
-          <div class="news-date">${dateStr}</div>
-          <div class="news-title">${item.title}</div>
-        </a>`;
-      }).join('');
-
-    // Apply lang to new elements
-    applyLang();
+    const now = new Date();
+    body.innerHTML = data.items.map(item => {
+      const d = new Date(item.pubDate);
+      const diff = Math.floor((now - d) / 86400000);
+      let ds;
+      if (diff === 0)      ds = currentLang === 'nl' ? 'Vandaag'   : 'Today';
+      else if (diff === 1) ds = currentLang === 'nl' ? 'Gisteren'  : 'Yesterday';
+      else if (diff < 7)   ds = currentLang === 'nl' ? `${diff} dagen geleden` : `${diff} days ago`;
+      else ds = d.toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day:'numeric', month:'short' });
+      return `<a class="news-item" href="${item.link}" target="_blank">
+        <div class="news-dot"></div>
+        <div class="news-date">${ds}</div>
+        <div class="news-t">${item.title}</div>
+      </a>`;
+    }).join('');
   } catch {
     body.innerHTML = `
-      <div class="news-section-label">► BUNGIE NEWS</div>
       ${['This Week In Destiny – 04/23/2026','Destiny 2 Update 9.5.6.2','Introducing C.A.R.R.I.','Marathon Update 1.0.6.1','This Week in Destiny – 4/16/2026'].map((t,i) => {
         const dates = ['Yesterday','3 days ago','14 apr','14 apr','16 apr'];
         return `<a class="news-item" href="https://www.bungie.net/en/News" target="_blank">
-          <div class="news-dot"></div>
-          <div class="news-date">${dates[i]}</div>
-          <div class="news-title">${t}</div>
-        </a>`;
+          <div class="news-dot"></div><div class="news-date">${dates[i]}</div><div class="news-t">${t}</div></a>`;
       }).join('')}
       <div style="text-align:center;margin-top:10px">
         <a href="https://www.bungie.net/en/News" target="_blank" class="btn btn-out" style="font-size:11px">
-          ${currentLang === 'nl' ? 'Meer nieuws →' : 'More news →'}
+          ${currentLang === 'nl' ? 'Meer nieuws op Bungie.net →' : 'More news on Bungie.net →'}
         </a>
       </div>`;
   }
 }
 
-// ===== LIVE GAME STATUS =====
-async function loadStatus() {
+// ===== LIVE STATS via Vercel API =====
+async function loadStats() {
   try {
-    const data = await bget('/Settings/');
-    const ok = data?.ErrorCode === 1;
-    document.getElementById('server-status').innerHTML = ok
+    const r = await fetch('/api/bungie-stats');
+    const d = await r.json();
+
+    // Online players
+    if (d.steamPlayers) document.getElementById('online-count').textContent = Number(d.steamPlayers).toLocaleString();
+
+    // Server status
+    document.getElementById('server-status').innerHTML = d.serverOnline !== false
       ? '<span style="color:var(--green)">● Online</span>'
       : '<span style="color:var(--red)">● Offline</span>';
-  } catch {
+
+    // Power caps
+    document.getElementById('soft-cap').textContent = d.softCap ?? '200';
+    document.getElementById('pow-cap').textContent  = d.powerCap ?? '550';
+    document.getElementById('pin-cap').textContent  = d.pinnacleFloor ?? '550';
+
+    // Activities
+    if (d.activities?.length) renderActivities(d.activities);
+
+    // Xur
+    if (d.featuredWeapons?.length) renderXurItems(d.featuredWeapons);
+
+  } catch(e) {
+    console.warn('Stats API error:', e);
+    // Fallback values
+    document.getElementById('soft-cap').textContent = '200';
+    document.getElementById('pow-cap').textContent  = '550';
+    document.getElementById('pin-cap').textContent  = '550';
     document.getElementById('server-status').innerHTML = '<span style="color:var(--gold)">● Unknown</span>';
   }
 
-  // Steam player count via corsproxy
-  try {
-    const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=1085660'));
-    const d = await r.json();
-    const parsed = JSON.parse(d.contents);
-    const count = parsed?.response?.player_count;
-    if (count) document.getElementById('online-count').textContent = count.toLocaleString();
-  } catch {
-    document.getElementById('online-count').textContent = '~6,500';
-  }
-
-  // Power caps — current Season 26 (The Edge of Fate) values
-  document.getElementById('soft-cap').textContent = '200';
-  document.getElementById('pow-cap').textContent  = '550';
-  document.getElementById('pin-cap').textContent  = '550';
-
-  // Season progress
+  // Season progress (always calculated client-side)
   const seasonStart = new Date('2025-12-02');
   const seasonEnd   = new Date('2026-07-15');
   const now = new Date();
-  const total = seasonEnd - seasonStart;
-  const elapsed = now - seasonStart;
-  const pct = Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
+  const pct = Math.min(100, Math.max(0, Math.round(((now - seasonStart) / (seasonEnd - seasonStart)) * 100)));
+  const daysLeft = Math.ceil((seasonEnd - now) / 86400000);
   document.getElementById('season-pct').textContent = pct + '%';
   document.getElementById('season-bar').style.width = pct + '%';
-  const daysLeft = Math.ceil((seasonEnd - now) / 86400000);
-  document.getElementById('season-dates').textContent =
-    currentLang === 'nl'
-      ? `📅 Begonnen: 2 dec 2025 · Verwacht einde: ~15 juli 2026 (±${daysLeft} dagen)`
-      : `📅 Started: Dec 2, 2025 · Expected end: ~Jul 15, 2026 (±${daysLeft} days)`;
+  document.getElementById('season-dates').textContent = currentLang === 'nl'
+    ? `📅 Begonnen: 2 dec 2025 · Verwacht einde: ~15 juli 2026 (±${daysLeft} dagen)`
+    : `📅 Started: Dec 2, 2025 · Expected end: ~Jul 15, 2026 (±${daysLeft} days)`;
+  document.getElementById('last-updated').textContent = (currentLang === 'nl' ? 'Bijgewerkt: ' : 'Updated: ') + new Date().toLocaleTimeString();
+}
 
-  // Updated time
-  document.getElementById('last-updated').textContent =
-    (currentLang === 'nl' ? 'Bijgewerkt: ' : 'Updated: ') + new Date().toLocaleTimeString();
+// ===== ACTIVITIES with real Bungie images =====
+const ACT_IMAGES = {
+  raid:       'img/activities/raid.png',
+  dungeon:    'img/activities/dungeons.png',
+  nightfall:  'img/activities/nightfall.png',
+  strike:     'img/activities/vanguard.png',
+  crucible:   'img/activities/crucible.png',
+  gambit:     'img/activities/gambit.png',
+  trials:     'img/activities/crucible.png',
+  ironbanner: 'img/activities/crucible.png',
+  lostsector: 'img/activities/lost-sectors.png',
+  exotic:     'img/activities/exotic-missions.png',
+  seasonal:   'img/activities/seasonal.png',
+};
+
+const BADGE_STYLES = {
+  raid:       'background:rgba(156,107,255,.15);color:var(--purple);border:1px solid rgba(156,107,255,.3)',
+  dungeon:    'background:rgba(156,107,255,.15);color:var(--purple);border:1px solid rgba(156,107,255,.3)',
+  nightfall:  'background:rgba(79,195,247,.15);color:var(--blue);border:1px solid rgba(79,195,247,.3)',
+  trials:     'background:rgba(245,200,66,.15);color:var(--gold);border:1px solid rgba(245,200,66,.3)',
+  ironbanner: 'background:rgba(245,200,66,.15);color:var(--gold);border:1px solid rgba(245,200,66,.3)',
+  exotic:     'background:rgba(245,200,66,.15);color:var(--gold);border:1px solid rgba(245,200,66,.3)',
+  crucible:   'background:rgba(239,83,80,.15);color:var(--red);border:1px solid rgba(239,83,80,.3)',
+  gambit:     'background:rgba(102,187,106,.15);color:var(--green);border:1px solid rgba(102,187,106,.3)',
+  strike:     'background:rgba(79,195,247,.15);color:var(--blue);border:1px solid rgba(79,195,247,.3)',
+  seasonal:   'background:rgba(79,195,247,.15);color:var(--blue);border:1px solid rgba(79,195,247,.3)',
+  lostsector: 'background:rgba(102,187,106,.15);color:var(--green);border:1px solid rgba(102,187,106,.3)',
+};
+
+function renderActivities(acts) {
+  const grid = document.getElementById('activities-grid');
+  grid.innerHTML = acts.slice(0,8).map(a => {
+    const img = a.pgcrImage || ACT_IMAGES[a.type] || 'img/activities/vanguard.png';
+    const ico = ACT_IMAGES[a.type] || 'img/activities/vanguard.png';
+    const bs  = BADGE_STYLES[a.type] || BADGE_STYLES.strike;
+    return `<div class="act-card">
+      <div class="act-card-bg" style="background-image:url('${img}')"></div>
+      <img class="act-card-ico" src="${ico}" onerror="this.style.display='none'">
+      <div class="act-info">
+        <div class="act-name">${a.name}</div>
+        <div class="act-det">${a.sub || ''}</div>
+      </div>
+      <span class="act-badge" style="${bs}">${a.badge}</span>
+    </div>`;
+  }).join('');
+}
+
+// Fallback activities als API niet werkt
+function loadFallbackActivities() {
+  const acts = [
+    { type:'nightfall', name:'Nightfall: The Ordeal', sub: currentLang==='nl'?'Grandmaster beschikbaar':'Grandmaster available', badge:'Nightfall' },
+    { type:'trials',    name:'Trials of Osiris',      sub:'Burnout · Elimination 3v3', badge:'Trials' },
+    { type:'raid',      name:'Root of Nightmares',    sub: currentLang==='nl'?'Featured Raid':'Featured Raid', badge:'Raid' },
+    { type:'crucible',  name:'Crucible',              sub:'Control · Clash · Rumble', badge:'Crucible' },
+    { type:'gambit',    name:'Gambit',                sub:'Prime', badge:'Gambit' },
+    { type:'strike',    name:'Vanguard Ops',          sub: currentLang==='nl'?'Playlist':'Playlist', badge:'Vanguard' },
+    { type:'lostsector',name:'Legend Lost Sector',    sub:'Bunker E15', badge:'Lost Sector' },
+    { type:'seasonal',  name:'Seasonal Activity',     sub: currentLang==='nl'?'Deze week actief':'Active this week', badge:'Seasonal' },
+  ];
+  renderActivities(acts);
+}
+
+// ===== XUR ITEMS =====
+function renderXurItems(items) {
+  const body = document.getElementById('xur-body');
+  const now = new Date();
+  const day = now.getUTCDay();
+  const hour = now.getUTCHours();
+  const active = (day===5&&hour>=17)||day===6||day===0||(day===1&&hour<17)||(day===2&&hour<17);
+
+  const dot = document.getElementById('xur-dot');
+  const badge = document.getElementById('xur-badge');
+
+  if (active) {
+    dot.style.background = 'var(--green)';
+    badge.textContent = currentLang === 'nl' ? '● Actief' : '● Active';
+    badge.style.color = 'var(--green)';
+    body.innerHTML = items.slice(0,4).map(w => {
+      const border = w.isExotic ? '#f5c842' : '#9b72cf';
+      const iconHtml = w.icon
+        ? `<img class="xur-ico" src="/api/bungie-proxy?action=img&url=${encodeURIComponent(w.icon)}" onerror="this.outerHTML='<div class=xur-ico-fb>🔫</div>'">`
+        : `<div class="xur-ico-fb">🔫</div>`;
+      return `<div class="xur-item" style="border-left:2px solid ${border}">
+        ${iconHtml}
+        <div>
+          <div class="xur-name">${w.name}</div>
+          <div class="xur-type">${w.isExotic ? 'Exotic' : 'Legendary'} · ${w.typeName}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    dot.style.background = 'var(--red)';
+    badge.textContent = currentLang === 'nl' ? '● Niet actief' : '● Not Active';
+    badge.style.color = 'var(--red)';
+    const nextFri = new Date();
+    nextFri.setUTCDate(now.getUTCDate() + ((5 - now.getUTCDay() + 7) % 7 || 7));
+    nextFri.setUTCHours(17,0,0,0);
+    const diff = nextFri - now;
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    body.innerHTML = `<div style="text-align:center;padding:20px">
+      <div style="font-size:32px;margin-bottom:8px">👾</div>
+      <div style="font-family:var(--fd);font-size:15px;font-weight:700;text-transform:uppercase;margin-bottom:4px">
+        ${currentLang==='nl'?'Xûr is vertrokken':'Xûr has left'}
+      </div>
+      <div style="font-size:12px;color:var(--t3)">
+        ${currentLang==='nl'?`Terug over ${d}d ${h}u`:`Returns in ${d}d ${h}h`}
+      </div>
+    </div>`;
+  }
 }
 
 // ===== RESET TIMER =====
 function startTimer() {
-  function getNextReset() {
+  function getNextWeekly() {
     const now = new Date();
     const r = new Date(now);
-    r.setUTCHours(17, 0, 0, 0); // 17:00 UTC = 18:00 NL (winter) / 19:00 (zomer)
-    const day = now.getUTCDay(); // 0=Sun,2=Tue
-    const daysUntil = (2 - day + 7) % 7 || 7;
+    r.setUTCHours(17,0,0,0);
+    const daysUntil = (2 - now.getUTCDay() + 7) % 7 || 7;
     r.setUTCDate(now.getUTCDate() + daysUntil);
     return r;
   }
-
-  function tick() {
-    const diff = getNextReset() - new Date();
-    if (diff <= 0) { tick(); return; }
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('t-d').textContent = String(d).padStart(2,'0');
-    document.getElementById('t-h').textContent = String(h).padStart(2,'0');
-    document.getElementById('t-m').textContent = String(m).padStart(2,'0');
-    document.getElementById('t-s').textContent = String(s).padStart(2,'0');
-
-    // Also update weekly/daily in status card
-    document.getElementById('weekly-txt').textContent = `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    const diffDay = getNextDailyReset() - new Date();
-    const dh = Math.floor((diffDay % 86400000) / 3600000);
-    const dm = Math.floor((diffDay % 3600000) / 60000);
-    const ds = Math.floor((diffDay % 60000) / 1000);
-    document.getElementById('daily-txt').textContent = `${String(dh).padStart(2,'0')}:${String(dm).padStart(2,'0')}:${String(ds).padStart(2,'0')}`;
-  }
-
-  function getNextDailyReset() {
+  function getNextDaily() {
     const now = new Date();
     const r = new Date(now);
-    r.setUTCHours(17, 0, 0, 0);
+    r.setUTCHours(17,0,0,0);
     if (now >= r) r.setUTCDate(r.getUTCDate() + 1);
     return r;
   }
+  function pad(n) { return String(n).padStart(2,'0'); }
 
+  function tick() {
+    const now = new Date();
+    const wd = getNextWeekly() - now;
+    const dd = getNextDaily() - now;
+
+    const d = Math.floor(wd/86400000);
+    const h = Math.floor((wd%86400000)/3600000);
+    const m = Math.floor((wd%3600000)/60000);
+    const s = Math.floor((wd%60000)/1000);
+
+    document.getElementById('t-d').textContent = pad(d);
+    document.getElementById('t-h').textContent = pad(h);
+    document.getElementById('t-m').textContent = pad(m);
+    document.getElementById('t-s').textContent = pad(s);
+
+    document.getElementById('weekly-txt').textContent = `${d}d ${pad(h)}:${pad(m)}:${pad(s)}`;
+
+    const dh = Math.floor((dd%86400000)/3600000);
+    const dm = Math.floor((dd%3600000)/60000);
+    const ds = Math.floor((dd%60000)/1000);
+    document.getElementById('daily-txt').textContent = `${pad(dh)}:${pad(dm)}:${pad(ds)}`;
+  }
   tick();
   setInterval(tick, 1000);
 }
 
-// ===== ACTIVITIES =====
-function loadActivities() {
-  const acts = [
-    { icon:'🌙', bg:'rgba(156,107,255,.15)', name:'Nightfall: The Ordeal', det:{ en:'Grandmaster available', nl:'Grandmaster beschikbaar' }, badge:'Weekly', bc:'rgba(245,200,66,.15)', bc2:'var(--gold)' },
-    { icon:'⚖️', bg:'rgba(245,200,66,.15)',  name:'Trials of Osiris',      det:{ en:'Burnout · Elimination 3v3', nl:'Burnout · Eliminatie 3v3' }, badge:'Active', bc:'rgba(102,187,106,.15)', bc2:'var(--green)' },
-    { icon:'🏰', bg:'rgba(79,195,247,.15)',  name:'Root of Nightmares',    det:{ en:'Featured Raid · First clear bonus', nl:'Featured Raid · Eerste clear bonus' }, badge:'Raid', bc:'rgba(79,195,247,.15)', bc2:'var(--blue)' },
-    { icon:'🎯', bg:'rgba(239,83,80,.15)',   name:'Vanguard Ops',          det:{ en:'Playlist · All difficulties', nl:'Playlist · Alle moeilijkheden' }, badge:'Daily', bc:'rgba(239,83,80,.15)', bc2:'var(--red)' },
-    { icon:'⚔️', bg:'rgba(102,187,106,.15)', name:'Crucible',              det:{ en:'Control · Clash · Rumble', nl:'Control · Clash · Rumble' }, badge:'Daily', bc:'rgba(239,83,80,.15)', bc2:'var(--red)' },
-  ];
-  document.getElementById('activities-body').innerHTML = acts.map(a => `
-    <div class="act-item">
-      <div class="act-ico" style="background:${a.bg}">${a.icon}</div>
-      <div>
-        <div class="act-name">${a.name}</div>
-        <div class="act-det">${a.det[currentLang] || a.det.en}</div>
-      </div>
-      <span class="act-badge" style="background:${a.bc};color:${a.bc2};border:1px solid ${a.bc2}44">${a.badge}</span>
-    </div>`).join('');
-}
-
-// ===== XUR =====
-function loadXur() {
-  const now = new Date();
-  const day = now.getUTCDay(); // 5=Fri, 2=Tue
-  const hour = now.getUTCHours();
-  const xurActive = day === 5 && hour >= 17 || day === 6 || day === 0 || (day === 1 && hour < 17) || (day === 2 && hour < 17);
-
-  const dot = document.getElementById('xur-dot');
-  const badge = document.getElementById('xur-status-badge');
-
-  if (xurActive) {
-    dot.style.background = 'var(--green)';
-    badge.textContent = currentLang === 'nl' ? '● Actief' : '● Active';
-    badge.style.color = 'var(--green)';
-    document.getElementById('xur-body').innerHTML = `
-      <div style="font-size:12px;color:var(--t3);margin-bottom:10px" data-en="Location: The Tower (Hangar)" data-nl="Locatie: De Tower (Hangar)">
-        📍 ${currentLang === 'nl' ? 'Locatie: De Tower (Hangar)' : 'Location: The Tower (Hangar)'}
-      </div>
-      ${[
-        { ico:'🟡', bg:'rgba(245,200,66,.15)', name:'Gjallarhorn', type:'Exotic Rocket Launcher' },
-        { ico:'🟣', bg:'rgba(156,107,255,.15)', name:'Lucky Pants', type:'Exotic Hunter Legs' },
-        { ico:'🔵', bg:'rgba(79,195,247,.15)',  name:'Exotic Engram', type:'Random Exotic' },
-        { ico:'📦', bg:'rgba(30,34,53,.8)',     name:'Xenology Quest', type:'Weekly Quest' },
-      ].map(x => `<div class="xur-item">
-        <div class="xur-ico" style="background:${x.bg}">${x.ico}</div>
-        <div><div class="xur-name">${x.name}</div><div class="xur-type">${x.type}</div></div>
-      </div>`).join('')}`;
-  } else {
-    dot.style.background = 'var(--red)';
-    badge.textContent = currentLang === 'nl' ? '● Niet Actief' : '● Not Active';
-    badge.style.color = 'var(--red)';
-    // Find next Friday
-    const nextFri = new Date();
-    const daysUntilFri = (5 - now.getUTCDay() + 7) % 7 || 7;
-    nextFri.setUTCDate(now.getUTCDate() + daysUntilFri);
-    nextFri.setUTCHours(17, 0, 0, 0);
-    const diff = nextFri - now;
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    document.getElementById('xur-body').innerHTML = `
-      <div style="text-align:center;padding:20px">
-        <div style="font-size:32px;margin-bottom:10px">👾</div>
-        <div style="font-family:var(--fd);font-size:16px;font-weight:700;text-transform:uppercase;margin-bottom:6px">
-          ${currentLang === 'nl' ? 'Xûr is vertrokken' : 'Xûr has left'}
-        </div>
-        <div style="font-size:13px;color:var(--t3)">
-          ${currentLang === 'nl' ? `Komt terug over ${d} dagen en ${h} uur` : `Returns in ${d} days and ${h} hours`}
-        </div>
-        <div style="font-size:12px;color:var(--t3);margin-top:4px">Friday 17:00 UTC</div>
-      </div>`;
+// ===== LOAD ALL =====
+async function loadAll() {
+  loadNews();
+  loadFallbackActivities(); // show immediately
+  loadXurFallback();
+  try {
+    await loadStats(); // overwrites with live data
+  } catch(e) {
+    console.warn('Stats load failed:', e);
   }
 }
 
-// ===== TRIALS =====
-function loadTrials() {
-  document.getElementById('trials-body').innerHTML = `
-    <div class="stat-row"><span class="stat-row-label">Map</span><span class="stat-row-val" style="color:var(--gold)">Burnout</span></div>
-    <div class="stat-row"><span class="stat-row-label" data-en="Mode" data-nl="Modus">Mode</span><span class="stat-row-val">Elimination 3v3</span></div>
-    <div class="stat-row"><span class="stat-row-label" data-en="Status" data-nl="Status">Status</span><span class="stat-row-val" style="color:var(--green)">● Active</span></div>
-    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-      <div style="font-family:var(--fu);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:7px" data-en="Rewards" data-nl="Beloningen">Rewards</div>
-      ${[['3 Wins','Armor','var(--t2)'],['5 Wins','The Messenger','var(--purple)'],['Flawless','⭐ Adept','var(--gold)']].map(([w,n,c])=>
-        `<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
-          <span style="color:var(--t2)">${w}</span><span style="color:${c}">${n}</span>
-        </div>`).join('')}
-    </div>`;
-}
-
-// ===== NIGHTFALL =====
-function loadNightfall() {
-  document.getElementById('nightfall-body').innerHTML = `
-    <div class="stat-row"><span class="stat-row-label">Strike</span><span class="stat-row-val" style="color:var(--blue)">The Arms Dealer</span></div>
-    <div class="stat-row"><span class="stat-row-label" data-en="Difficulty" data-nl="Moeilijkheid">Difficulty</span><span class="stat-row-val">Grandmaster</span></div>
-    <div class="stat-row"><span class="stat-row-label" data-en="Reward" data-nl="Beloning">Reward</span><span class="stat-row-val" style="color:var(--gold)">Adept Weapon</span></div>
-    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-      <div style="font-family:var(--fu);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:7px" data-en="Modifiers" data-nl="Modifiers">Modifiers</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap">
-        ${['Extinguish','Champions','Arc Shields'].map(m=>
-          `<span style="background:rgba(239,83,80,.15);color:var(--red);border:1px solid rgba(239,83,80,.3);font-family:var(--fu);font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px">${m}</span>`).join('')}
-      </div>
-    </div>`;
-}
-
-// ===== LOST SECTOR =====
-function loadLostSector() {
-  const sectors = ['Concealed Void','Bunker E15','Perdition','The Quarry','Skydock IV','Veles Labyrinth','Excavation Site XII'];
-  const rewards = ['Exotic Helmet','Exotic Arms','Exotic Chest','Exotic Legs'];
-  const d = new Date().getUTCDay();
-  document.getElementById('lostsector-body').innerHTML = `
-    <div class="stat-row"><span class="stat-row-label" data-en="Location" data-nl="Locatie">Location</span><span class="stat-row-val" style="color:var(--blue)">${sectors[d % sectors.length]}</span></div>
-    <div class="stat-row"><span class="stat-row-label" data-en="Difficulty" data-nl="Moeilijkheid">Difficulty</span><span class="stat-row-val">Legend / Master</span></div>
-    <div class="stat-row"><span class="stat-row-label" data-en="Reward" data-nl="Beloning">Reward</span><span class="stat-row-val" style="color:var(--gold)">${rewards[d % rewards.length]}</span></div>
-    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-      <div style="font-size:12px;color:var(--t3)" data-en="Solo completions only for exotic reward." data-nl="Alleen solo voor exotic beloning.">
-        ${currentLang === 'nl' ? 'Alleen solo voor exotic beloning.' : 'Solo completions only for exotic reward.'}
-      </div>
-    </div>`;
-}
-
-// ===== LOAD ALL =====
-function loadAll() {
-  loadNews();
-  loadStatus();
-  loadActivities();
-  loadXur();
-  loadTrials();
-  loadNightfall();
-  loadLostSector();
+function loadXurFallback() {
+  const items = [
+    { name:'Gjallarhorn', typeName:'Exotic Rocket Launcher', isExotic:true, icon:null },
+    { name:'Lucky Pants',  typeName:'Exotic Hunter Legs', isExotic:true, icon:null },
+    { name:'Exotic Engram',typeName:'Random Exotic', isExotic:true, icon:null },
+  ];
+  renderXurItems(items);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   applyLang();
   startTimer();
   loadAll();
-  setInterval(loadStatus, 300000); // refresh status every 5 min
+  setInterval(() => loadStats(), 300000);
 });
 </script>
 
