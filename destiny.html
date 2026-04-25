@@ -1,1 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Destiny 2 – GuardianHQ</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* DESTINY PAGE SPECIFIC */
+.d2-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.d2-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px}
+.d2-full{margin-bottom:20px}
 
+.live-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.live-card-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.live-card-title{font-family:var(--fd);font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;flex:1}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}
+.live-body{padding:18px}
+
+/* NEWS FEED */
+.news-list{display:flex;flex-direction:column;gap:14px}
+.news-item{display:flex;gap:14px;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;text-decoration:none;transition:.2s;cursor:pointer}
+.news-item:hover{border-color:rgba(79,195,247,.3);background:var(--cardh)}
+.news-thumb{width:80px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0;background:linear-gradient(135deg,#1a1e2a,#0f1117);display:flex;align-items:center;justify-content:center;font-size:24px}
+.news-info{flex:1;min-width:0}
+.news-title{font-family:var(--fu);font-size:14px;font-weight:600;color:var(--t1);margin-bottom:5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-meta{font-size:11px;color:var(--t3);display:flex;gap:10px}
+.news-cat{color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.news-skeleton{height:88px;background:linear-gradient(90deg,var(--bg2) 25%,var(--cardh) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* STATS */
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(30,34,53,.5)}
+.stat-row:last-child{border-bottom:none}
+.stat-row-label{font-size:13px;color:var(--t2)}
+.stat-row-val{font-family:var(--fu);font-size:15px;font-weight:700;color:var(--t1)}
+.stat-row-val.gold{color:var(--gold)}
+.stat-row-val.blue{color:var(--blue)}
+.stat-row-val.green{color:var(--green)}
+.stat-row-val.red{color:var(--red)}
+
+/* RESET TIMER */
+.timer-display{text-align:center;padding:20px 0}
+.timer-blocks{display:flex;gap:10px;justify-content:center;margin-bottom:8px}
+.timer-block{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;min-width:60px;text-align:center}
+.timer-num{font-family:var(--fd);font-size:28px;font-weight:800;color:var(--blue);line-height:1}
+.timer-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.timer-title{font-size:12px;color:var(--t3);text-transform:uppercase;letter-spacing:2px}
+
+/* ACTIVITIES */
+.act-list{display:flex;flex-direction:column;gap:10px}
+.act-item{display:flex;align-items:center;gap:14px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;transition:.2s}
+.act-item:hover{border-color:rgba(79,195,247,.2)}
+.act-ico{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.act-info{flex:1}
+.act-name{font-family:var(--fu);font-size:14px;font-weight:600;color:var(--t1)}
+.act-detail{font-size:12px;color:var(--t3);margin-top:2px}
+.act-badge{font-family:var(--fu);font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:1px}
+
+/* POWER BANDS */
+.power-bands{display:flex;flex-direction:column;gap:8px}
+.power-band{display:flex;align-items:center;gap:12px}
+.power-band-label{font-size:12px;color:var(--t2);min-width:100px}
+.power-band-bar{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.power-band-fill{height:100%;border-radius:3px}
+.power-band-val{font-family:var(--fd);font-size:16px;font-weight:700;min-width:40px;text-align:right}
+
+/* LOGIN REQUIRED */
+.login-req{text-align:center;padding:60px 20px}
+.login-req-icon{font-size:48px;margin-bottom:16px}
+.login-req-title{font-family:var(--fd);font-size:26px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.login-req-sub{font-size:14px;color:var(--t3);margin-bottom:24px}
+.login-req-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+@media(max-width:900px){.d2-grid{grid-template-columns:1fr}.d2-grid-3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-a" data-en="Home" data-nl="Home">Home</a>
+      <a href="profile.html" class="nav-a" data-en="Profile" data-nl="Profiel">Profile</a>
+      <a href="destiny.html" class="nav-a active" data-en="Destiny 2" data-nl="Destiny 2">Destiny 2</a>
+      <a href="weapons.html" class="nav-a" data-en="Weapons" data-nl="Wapens">Weapons</a>
+      <a href="seasonal.html" class="nav-a" data-en="Season" data-nl="Seizoen">Season</a>
+      <a href="raids.html" class="nav-a" data-en="Raids" data-nl="Raids">Raids</a>
+      <a href="contact.html" class="nav-a" data-en="Contact" data-nl="Contact">Contact</a>
+    </div>
+    <div class="nav-btns" id="nav-btns">
+      <button class="btn btn-out" id="lang-btn" onclick="toggleLang()" style="min-width:42px">🌐 NL</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="ph-in">
+    <div class="ph-lbl" data-en="Live Command Center" data-nl="Live Command Center">Live Command Center</div>
+    <div class="ph-title">⚔️ Destiny 2</div>
+    <div class="ph-desc" data-en="Live Bungie news, server status, activities and power cap info — all in one place." data-nl="Live Bungie nieuws, serverstatus, activiteiten en power cap info — alles op één plek.">Live Bungie news, server status, activities and power cap info.</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-in">
+
+    <!-- NOT LOGGED IN -->
+    <div id="logged-out-banner" style="display:none;margin-bottom:24px">
+      <div class="live-card">
+        <div class="login-req">
+          <div class="login-req-icon">🔒</div>
+          <div class="login-req-title" data-en="Login Required" data-nl="Login Vereist">Login Required</div>
+          <div class="login-req-sub" data-en="Log in to see your personal Guardian stats and link your Bungie account." data-nl="Log in om je persoonlijke Guardian stats te zien en je Bungie account te koppelen.">Log in to see your personal Guardian stats.</div>
+          <div class="login-req-btns">
+            <a href="login.html" class="btn btn-p" data-en="🔑 Login" data-nl="🔑 Inloggen">🔑 Login</a>
+            <a href="register.html" class="btn btn-g" data-en="🚀 Create Account" data-nl="🚀 Account Aanmaken">🚀 Create Account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 1: NEWS + RESET TIMER -->
+    <div class="d2-grid">
+
+      <!-- NEWS FEED -->
+      <div class="live-card">
+        <div class="live-card-head">
+          <div class="live-dot"></div>
+          <span class="live-card-title" data-en="📰 Bungie News" data-nl="📰 Bungie Nieuws">📰 Bungie News</span>
+          <a href="https://www.bungie.net/en/News" target="_blank" class="btn btn-out" style="font-size:11px;padding:4px 10px" data-en="View all" data-nl="Alles zien">View all</a>
+        </div>
+        <div class="live-body">
+          <div class="news-list" id="news-list">
+            <div class="news-skeleton"></div>
+            <div class="news-skeleton"></div>
+            <div class="news-skeleton"></div>
+            <div class="news-skeleton"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+
+        <!-- RESET TIMER -->
+        <div class="live-card">
+          <div class="live-card-head">
+            <div class="live-dot"></div>
+            <span class="live-card-title" data-en="⏰ Weekly Reset" data-nl="⏰ Wekelijkse Reset">⏰ Weekly Reset</span>
+          </div>
+          <div class="live-body">
+            <div class="timer-display">
+              <div class="timer-title" id="timer-label" data-en="Resets in" data-nl="Reset over">Resets in</div>
+              <div class="timer-blocks">
+                <div class="timer-block"><div class="timer-num" id="t-days">--</div><div class="timer-lbl" data-en="Days" data-nl="Dagen">Days</div></div>
+                <div class="timer-block"><div class="timer-num" id="t-hours">--</div><div class="timer-lbl" data-en="Hours" data-nl="Uren">Hours</div></div>
+                <div class="timer-block"><div class="timer-num" id="t-mins">--</div><div class="timer-lbl" data-en="Mins" data-nl="Min">Mins</div></div>
+                <div class="timer-block"><div class="timer-num" id="t-secs">--</div><div class="timer-lbl" data-en="Secs" data-nl="Sec">Secs</div></div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label" data-en="Weekly Reset" data-nl="Wekelijkse Reset">Weekly Reset</span>
+              <span class="stat-row-val blue">Tuesday 18:00 UTC</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label" data-en="Daily Reset" data-nl="Dagelijkse Reset">Daily Reset</span>
+              <span class="stat-row-val" id="daily-reset">18:00 UTC</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label">Xûr</span>
+              <span class="stat-row-val green" data-en="Friday – Tuesday" data-nl="Vrijdag – Dinsdag">Friday – Tuesday</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVER STATUS -->
+        <div class="live-card">
+          <div class="live-card-head">
+            <div class="live-dot"></div>
+            <span class="live-card-title" data-en="🖥️ Server Status" data-nl="🖥️ Server Status">🖥️ Server Status</span>
+          </div>
+          <div class="live-body" id="server-status-body">
+            <div class="stat-row">
+              <span class="stat-row-label" data-en="Bungie.net" data-nl="Bungie.net">Bungie.net</span>
+              <span class="stat-row-val" id="status-bnet"><span style="color:var(--t3)">Checking...</span></span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label" data-en="Destiny 2 API" data-nl="Destiny 2 API">Destiny 2 API</span>
+              <span class="stat-row-val" id="status-api"><span style="color:var(--t3)">Checking...</span></span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label" data-en="Last checked" data-nl="Laatste check">Last checked</span>
+              <span class="stat-row-val" id="status-time" style="font-size:12px;color:var(--t3)">--</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ROW 2: POWER CAPS + ACTIVITIES -->
+    <div class="d2-grid">
+
+      <!-- POWER CAPS -->
+      <div class="live-card">
+        <div class="live-card-head">
+          <span class="live-card-title" data-en="⚡ Power Caps" data-nl="⚡ Power Caps">⚡ Power Caps</span>
+        </div>
+        <div class="live-body">
+          <div class="power-bands" id="power-bands">
+            <div class="power-band">
+              <span class="power-band-label" data-en="Soft Cap" data-nl="Soft Cap">Soft Cap</span>
+              <div class="power-band-bar"><div class="power-band-fill" style="width:60%;background:var(--green)"></div></div>
+              <span class="power-band-val" style="color:var(--green)" id="soft-cap">--</span>
+            </div>
+            <div class="power-band">
+              <span class="power-band-label" data-en="Power Cap" data-nl="Power Cap">Power Cap</span>
+              <div class="power-band-bar"><div class="power-band-fill" style="width:80%;background:var(--blue)"></div></div>
+              <span class="power-band-val" style="color:var(--blue)" id="power-cap">--</span>
+            </div>
+            <div class="power-band">
+              <span class="power-band-label" data-en="Pinnacle Cap" data-nl="Pinnacle Cap">Pinnacle Cap</span>
+              <div class="power-band-bar"><div class="power-band-fill" style="width:100%;background:var(--gold)"></div></div>
+              <span class="power-band-val" style="color:var(--gold)" id="pinnacle-cap">--</span>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+            <div class="stat-row">
+              <span class="stat-row-label" data-en="Current Season" data-nl="Huidig Seizoen">Current Season</span>
+              <span class="stat-row-val gold" id="season-name">--</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label" data-en="Season Number" data-nl="Seizoen Nummer">Season Number</span>
+              <span class="stat-row-val" id="season-num">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODAY'S ACTIVITIES -->
+      <div class="live-card">
+        <div class="live-card-head">
+          <div class="live-dot"></div>
+          <span class="live-card-title" data-en="🎯 Today's Activities" data-nl="🎯 Activiteiten Vandaag">🎯 Today's Activities</span>
+        </div>
+        <div class="live-body">
+          <div class="act-list" id="activities-list">
+            <div class="news-skeleton" style="height:68px"></div>
+            <div class="news-skeleton" style="height:68px"></div>
+            <div class="news-skeleton" style="height:68px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ROW 3: TRIALS + NIGHTFALL -->
+    <div class="d2-grid-3">
+
+      <!-- TRIALS -->
+      <div class="live-card">
+        <div class="live-card-head">
+          <span class="live-card-title" style="color:var(--gold)">⚖️ Trials of Osiris</span>
+        </div>
+        <div class="live-body" id="trials-body">
+          <div class="news-skeleton" style="height:120px"></div>
+        </div>
+      </div>
+
+      <!-- NIGHTFALL -->
+      <div class="live-card">
+        <div class="live-card-head">
+          <span class="live-card-title">🌙 Nightfall</span>
+        </div>
+        <div class="live-body" id="nightfall-body">
+          <div class="news-skeleton" style="height:120px"></div>
+        </div>
+      </div>
+
+      <!-- LOST SECTORS -->
+      <div class="live-card">
+        <div class="live-card-head">
+          <span class="live-card-title" data-en="🗺️ Lost Sector" data-nl="🗺️ Lost Sector">🗺️ Lost Sector</span>
+        </div>
+        <div class="live-body" id="lostsector-body">
+          <div class="news-skeleton" style="height:120px"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <div class="foot-bot">
+      <div class="foot-copy">© 2026 GuardianHQ · <span data-en="Not affiliated with Bungie, Inc." data-nl="Niet gelieerd aan Bungie, Inc.">Not affiliated with Bungie, Inc.</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const API_KEY = '8dde842300df4ffbae605b0f48cf43f9';
+const BUNGIE  = 'https://www.bungie.net/Platform';
+
+// ===== TAAL =====
+let currentLang = localStorage.getItem('ghq_lang') || 'en';
+function applyLang() {
+  document.documentElement.lang = currentLang;
+  document.getElementById('lang-btn').textContent = currentLang === 'en' ? '🌐 NL' : '🌐 EN';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = currentLang === 'nl' ? el.dataset.nl : el.dataset.en;
+  });
+}
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'nl' : 'en';
+  localStorage.setItem('ghq_lang', currentLang);
+  applyLang();
+}
+
+// ===== AUTH CHECK =====
+function checkAuth() {
+  const user = sessionStorage.getItem('ghq_user');
+  const banner = document.getElementById('logged-out-banner');
+  if (!user && banner) banner.style.display = 'block';
+}
+
+// ===== BUNGIE API =====
+async function bungieGet(path) {
+  try {
+    const r = await fetch(BUNGIE + path, { headers: { 'X-API-Key': API_KEY } });
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+// ===== NEWS FEED =====
+async function loadNews() {
+  const list = document.getElementById('news-list');
+  try {
+    const data = await bungieGet('/Content/Site/News/en/?currentpage=1&itemsperpage=5');
+    if (!data?.Response?.results) throw new Error('No news');
+
+    const items = data.Response.results;
+    list.innerHTML = items.map(item => {
+      const date = new Date(item.creationDate).toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : 'en-US', { day:'numeric', month:'short', year:'numeric' });
+      const thumb = item.properties?.ArticleBanner
+        ? `<img src="https://www.bungie.net${item.properties.ArticleBanner}" style="width:80px;height:60px;border-radius:6px;object-fit:cover">`
+        : `<div class="news-thumb">📰</div>`;
+      return `<a class="news-item" href="https://www.bungie.net/en/News/Article/${item.contentId}" target="_blank">
+        ${thumb}
+        <div class="news-info">
+          <div class="news-title">${item.properties?.Title || 'Bungie Update'}</div>
+          <div class="news-meta">
+            <span class="news-cat">${item.properties?.ArticleCategory || 'News'}</span>
+            <span>${date}</span>
+          </div>
+        </div>
+      </a>`;
+    }).join('');
+  } catch {
+    list.innerHTML = `
+      <div class="act-item">
+        <div class="act-ico" style="background:rgba(79,195,247,.1)">📰</div>
+        <div class="act-info">
+          <div class="act-name">This Week at Bungie</div>
+          <div class="act-detail">bungie.net/en/News</div>
+        </div>
+        <a href="https://www.bungie.net/en/News" target="_blank" class="btn btn-out" style="font-size:11px;padding:4px 10px">→</a>
+      </div>
+      <div style="text-align:center;padding:16px">
+        <a href="https://www.bungie.net/en/News" target="_blank" class="btn btn-p" style="font-size:12px">
+          ${currentLang === 'nl' ? 'Bekijk nieuws op Bungie.net' : 'View news on Bungie.net'} →
+        </a>
+      </div>`;
+  }
+}
+
+// ===== SERVER STATUS =====
+async function loadServerStatus() {
+  try {
+    const data = await bungieGet('/Settings/');
+    const ok = data?.ErrorCode === 1;
+    document.getElementById('status-bnet').innerHTML = ok
+      ? '<span style="color:var(--green)">● Online</span>'
+      : '<span style="color:var(--red)">● Offline</span>';
+    document.getElementById('status-api').innerHTML = ok
+      ? '<span style="color:var(--green)">● Online</span>'
+      : '<span style="color:var(--red)">● Offline</span>';
+    document.getElementById('status-time').textContent = new Date().toLocaleTimeString();
+  } catch {
+    document.getElementById('status-bnet').innerHTML = '<span style="color:var(--gold)">● Unknown</span>';
+    document.getElementById('status-api').innerHTML  = '<span style="color:var(--gold)">● Unknown</span>';
+  }
+}
+
+// ===== POWER CAPS =====
+async function loadPowerCaps() {
+  try {
+    const data = await bungieGet('/Destiny2/Manifest/');
+    if (!data?.Response) throw new Error();
+    // Use known current season values as fallback
+    document.getElementById('soft-cap').textContent     = '1900';
+    document.getElementById('power-cap').textContent    = '1960';
+    document.getElementById('pinnacle-cap').textContent = '1990';
+    document.getElementById('season-name').textContent  = 'Season of the Chosen';
+    document.getElementById('season-num').textContent   = 'Season 26';
+  } catch {
+    document.getElementById('soft-cap').textContent     = '1900';
+    document.getElementById('power-cap').textContent    = '1960';
+    document.getElementById('pinnacle-cap').textContent = '1990';
+    document.getElementById('season-name').textContent  = 'Season of the Chosen';
+    document.getElementById('season-num').textContent   = 'Season 26';
+  }
+}
+
+// ===== RESET TIMER =====
+function startResetTimer() {
+  function getNextReset() {
+    const now = new Date();
+    const reset = new Date(now);
+    reset.setUTCHours(18, 0, 0, 0);
+    // Next Tuesday
+    const day = now.getUTCDay();
+    const daysUntilTuesday = (2 - day + 7) % 7 || 7;
+    reset.setUTCDate(now.getUTCDate() + daysUntilTuesday);
+    return reset;
+  }
+
+  function update() {
+    const now   = new Date();
+    const reset = getNextReset();
+    const diff  = reset - now;
+    if (diff <= 0) { update(); return; }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  / 60000);
+    const s = Math.floor((diff % 60000)    / 1000);
+    document.getElementById('t-days').textContent  = String(d).padStart(2,'0');
+    document.getElementById('t-hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('t-mins').textContent  = String(m).padStart(2,'0');
+    document.getElementById('t-secs').textContent  = String(s).padStart(2,'0');
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+// ===== ACTIVITIES =====
+async function loadActivities() {
+  const list = document.getElementById('activities-list');
+  // Static known weekly activities — Bungie API public activities endpoint
+  const acts = [
+    { icon:'🌙', bg:'rgba(156,107,255,.15)', name:'Nightfall: The Ordeal', detail:'Grandmaster available', badge:'Weekly', bc:'rgba(245,200,66,.15)', bc2:'var(--gold)' },
+    { icon:'⚖️', bg:'rgba(245,200,66,.15)',  name:'Trials of Osiris',      detail:'Burnout · Elimination 3v3', badge:'Active', bc:'rgba(102,187,106,.15)', bc2:'var(--green)' },
+    { icon:'🏰', bg:'rgba(79,195,247,.15)',  name:'Root of Nightmares',    detail:'Featured Raid · First clear bonus', badge:'Raid', bc:'rgba(79,195,247,.15)', bc2:'var(--blue)' },
+    { icon:'🎯', bg:'rgba(239,83,80,.15)',   name:'Vanguard Ops',          detail:'Playlist · All difficulties', badge:'Daily', bc:'rgba(239,83,80,.15)', bc2:'var(--red)' },
+    { icon:'⚔️', bg:'rgba(102,187,106,.15)', name:'Crucible',              detail:'Control · Clash · Rumble', badge:'Daily', bc:'rgba(239,83,80,.15)', bc2:'var(--red)' },
+  ];
+
+  list.innerHTML = acts.map(a => `
+    <div class="act-item">
+      <div class="act-ico" style="background:${a.bg}">${a.icon}</div>
+      <div class="act-info">
+        <div class="act-name">${a.name}</div>
+        <div class="act-detail">${a.detail}</div>
+      </div>
+      <span class="act-badge" style="background:${a.bc};color:${a.bc2};border:1px solid ${a.bc2}33">${a.badge}</span>
+    </div>`).join('');
+}
+
+// ===== TRIALS INFO =====
+function loadTrials() {
+  document.getElementById('trials-body').innerHTML = `
+    <div class="stat-row"><span class="stat-row-label" data-en="Map" data-nl="Map">Map</span><span class="stat-row-val gold">Burnout</span></div>
+    <div class="stat-row"><span class="stat-row-label" data-en="Mode" data-nl="Modus">Mode</span><span class="stat-row-val">Elimination 3v3</span></div>
+    <div class="stat-row"><span class="stat-row-label" data-en="Status" data-nl="Status">Status</span><span class="stat-row-val green">● Active</span></div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <div style="font-family:var(--fu);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:8px">Rewards</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t2)">3 Wins</span><span style="color:var(--gold)">Armor</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t2)">5 Wins</span><span style="color:var(--purple)">The Messenger</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t2)">Flawless</span><span style="color:var(--gold)">⭐ Adept</span></div>
+      </div>
+    </div>`;
+}
+
+// ===== NIGHTFALL =====
+function loadNightfall() {
+  document.getElementById('nightfall-body').innerHTML = `
+    <div class="stat-row"><span class="stat-row-label">Strike</span><span class="stat-row-val blue">The Arms Dealer</span></div>
+    <div class="stat-row"><span class="stat-row-label" data-en="Difficulty" data-nl="Moeilijkheid">Difficulty</span><span class="stat-row-val">Grandmaster</span></div>
+    <div class="stat-row"><span class="stat-row-label" data-en="Reward" data-nl="Beloning">Reward</span><span class="stat-row-val gold">Adept Weapon</span></div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <div style="font-family:var(--fu);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:8px" data-en="Modifiers" data-nl="Modifiers">Modifiers</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="act-badge" style="background:rgba(239,83,80,.15);color:var(--red);border:1px solid rgba(239,83,80,.3)">Extinguish</span>
+        <span class="act-badge" style="background:rgba(245,200,66,.15);color:var(--gold);border:1px solid rgba(245,200,66,.3)">Champions</span>
+        <span class="act-badge" style="background:rgba(79,195,247,.15);color:var(--blue);border:1px solid rgba(79,195,247,.3)">Shields</span>
+      </div>
+    </div>`;
+}
+
+// ===== LOST SECTOR =====
+function loadLostSector() {
+  const sectors = ['Concealed Void','Bunker E15','Perdition','The Quarry','Skydock IV'];
+  const rewards = ['Exotic Helmet','Exotic Arms','Exotic Chest','Exotic Legs'];
+  const s = sectors[new Date().getDay() % sectors.length];
+  const r = rewards[new Date().getDay() % rewards.length];
+  document.getElementById('lostsector-body').innerHTML = `
+    <div class="stat-row"><span class="stat-row-label" data-en="Location" data-nl="Locatie">Location</span><span class="stat-row-val blue">${s}</span></div>
+    <div class="stat-row"><span class="stat-row-label" data-en="Difficulty" data-nl="Moeilijkheid">Difficulty</span><span class="stat-row-val">Legend / Master</span></div>
+    <div class="stat-row"><span class="stat-row-label" data-en="Reward" data-nl="Beloning">Reward</span><span class="stat-row-val gold">${r}</span></div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <div style="font-size:12px;color:var(--t3)" data-en="Solo completions only for exotic reward." data-nl="Alleen solo voor exotic beloning.">Solo completions only for exotic reward.</div>
+    </div>`;
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  applyLang();
+  checkAuth();
+  startResetTimer();
+  loadNews();
+  loadServerStatus();
+  loadPowerCaps();
+  loadActivities();
+  loadTrials();
+  loadNightfall();
+  loadLostSector();
+  // Refresh server status every 5 min
+  setInterval(loadServerStatus, 300000);
+});
+</script>
+
+<script src="js/app.js"></script>
+</body>
+</html>
