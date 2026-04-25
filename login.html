@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Inloggen – GuardianHQ</title>
+<title>Login – GuardianHQ</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -10,12 +10,13 @@
   <div class="nav-inner">
     <a href="index.html" class="logo"><div class="logo-hex">G</div><span class="logo-t">GuardianHQ</span></a>
     <div class="nav-links">
-      <a href="index.html" class="nav-a">Home</a>
-      <a href="weapons.html" class="nav-a">Wapens</a>
-      <a href="contact.html" class="nav-a">Contact</a>
+      <a href="index.html" class="nav-a" data-en="Home" data-nl="Home">Home</a>
+      <a href="weapons.html" class="nav-a" data-en="Weapons" data-nl="Wapens">Weapons</a>
+      <a href="contact.html" class="nav-a" data-en="Contact" data-nl="Contact">Contact</a>
     </div>
     <div class="nav-btns" id="nav-btns">
-      <a href="register.html" class="btn btn-p">Account aanmaken</a>
+      <a href="register.html" class="btn btn-p" data-en="Create Account" data-nl="Account Aanmaken">Create Account</a>
+      <button class="btn btn-out" id="lang-btn" onclick="toggleLang()" style="min-width:42px">🌐 NL</button>
     </div>
   </div>
 </nav>
@@ -28,38 +29,45 @@
     <div class="auth-logo">
       <div class="auth-logo-hex">G</div>
       <div class="auth-logo-t">GuardianHQ</div>
-      <div class="auth-logo-s">Destiny 2 Companion</div>
+      <div class="auth-logo-s" data-en="Destiny 2 Companion" data-nl="Destiny 2 Companion">Destiny 2 Companion</div>
     </div>
-    <div class="auth-ttl">Welkom terug</div>
-    <div class="auth-sub">Log in om je Guardian-stats te bekijken.</div>
+    <div class="auth-ttl" data-en="Welcome Back" data-nl="Welkom Terug">Welcome Back</div>
+    <div class="auth-sub" data-en="Log in to view your Guardian stats." data-nl="Log in om je Guardian-stats te bekijken.">Log in to view your Guardian stats.</div>
 
     <div class="alert alert-error" id="login-error" style="display:none">⚠️ <span id="login-error-msg"></span></div>
 
     <form id="login-form">
       <div class="fg">
-        <label class="flbl" for="l-email">E-mailadres</label>
+        <label class="flbl" for="l-email" data-en="Email Address" data-nl="E-mailadres">Email Address</label>
         <input class="finp" id="l-email" type="email" placeholder="guardian@example.com" required>
       </div>
       <div class="fg">
-        <label class="flbl" for="l-pass">Wachtwoord</label>
-        <input class="finp" id="l-pass" type="password" placeholder="••••••••" required>
+        <label class="flbl" for="l-pass" data-en="Password" data-nl="Wachtwoord">Password</label>
+        <div style="position:relative">
+          <input class="finp" id="l-pass" type="password" placeholder="••••••••" required style="padding-right:44px">
+          <button type="button" onclick="togglePassVis()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:16px" id="pass-eye">👁️</button>
+        </div>
         <div style="text-align:right;margin-top:6px">
-          <a href="#" style="font-size:12px;color:var(--blue);text-decoration:none" id="forgot-link">Wachtwoord vergeten?</a>
+          <a href="#" style="font-size:12px;color:var(--blue);text-decoration:none" id="forgot-link" data-en="Forgot password?" data-nl="Wachtwoord vergeten?">Forgot password?</a>
         </div>
       </div>
-      <button type="submit" class="btn btn-p btn-full" id="login-btn">🔑 Inloggen</button>
+      <button type="submit" class="btn btn-p btn-full" id="login-btn">
+        🔑 <span data-en="Login" data-nl="Inloggen">Login</span>
+      </button>
     </form>
 
-    <div class="auth-div"><div class="auth-div-l"></div><div class="auth-div-t">of</div><div class="auth-div-l"></div></div>
+    <div class="auth-div"><div class="auth-div-l"></div><div class="auth-div-t" data-en="or" data-nl="of">or</div><div class="auth-div-l"></div></div>
 
     <a href="https://www.bungie.net/en/OAuth/Authorize?client_id=51944&response_type=code&redirect_uri=https://guardian-hq-eight.vercel.app/profile.html"
-       class="btn btn-bungie btn-full">⬡ Inloggen met Bungie.net</a>
+       class="btn btn-bungie btn-full">⬡ <span data-en="Login with Bungie.net" data-nl="Inloggen met Bungie.net">Login with Bungie.net</span></a>
 
-    <div class="auth-foot">Nog geen account? <a href="register.html">Aanmaken →</a></div>
+    <div class="auth-foot">
+      <span data-en="No account yet?" data-nl="Nog geen account?">No account yet?</span>
+      <a href="register.html" data-en="Create one →" data-nl="Aanmaken →">Create one →</a>
+    </div>
   </div>
 </div>
 
-<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -76,6 +84,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+window.togglePassVis = function() {
+  const inp = document.getElementById('l-pass');
+  const eye = document.getElementById('pass-eye');
+  if (inp.type === 'password') { inp.type = 'text'; eye.textContent = '🙈'; }
+  else { inp.type = 'password'; eye.textContent = '👁️'; }
+}
+
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email  = document.getElementById('l-email').value.trim();
@@ -83,14 +98,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   const btn    = document.getElementById('login-btn');
   const errDiv = document.getElementById('login-error');
   const errMsg = document.getElementById('login-error-msg');
+  const lang   = document.documentElement.lang;
 
   errDiv.style.display = 'none';
-  btn.innerHTML = '⏳ Inloggen...';
+  btn.innerHTML = '⏳ ' + (lang==='nl' ? 'Inloggen...' : 'Logging in...');
   btn.disabled = true;
 
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pass);
-    // Sla op in sessionStorage voor nav
     sessionStorage.setItem('ghq_user', JSON.stringify({
       uid:      cred.user.uid,
       email:    cred.user.email,
@@ -98,34 +113,65 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     }));
     const redirect = new URLSearchParams(location.search).get('redirect');
     window.location.href = redirect || 'index.html';
-  } catch (err) {
-    btn.innerHTML = '🔑 Inloggen';
+  } catch(err) {
+    btn.innerHTML = '🔑 <span>' + (lang==='nl' ? 'Inloggen' : 'Login') + '</span>';
     btn.disabled = false;
     const msgs = {
-      'auth/invalid-credential':     'E-mail of wachtwoord onjuist.',
-      'auth/user-not-found':         'E-mail of wachtwoord onjuist.',
-      'auth/wrong-password':         'Wachtwoord onjuist.',
-      'auth/too-many-requests':      'Te veel pogingen. Probeer later opnieuw.',
-      'auth/network-request-failed': 'Geen internetverbinding.',
-      'auth/invalid-email':          'Ongeldig e-mailadres.',
+      en: {
+        'auth/invalid-credential':     'Incorrect email or password.',
+        'auth/user-not-found':         'No account found with this email.',
+        'auth/wrong-password':         'Incorrect password.',
+        'auth/too-many-requests':      'Too many attempts. Please try again later.',
+        'auth/network-request-failed': 'No internet connection.',
+      },
+      nl: {
+        'auth/invalid-credential':     'E-mail of wachtwoord onjuist.',
+        'auth/user-not-found':         'Geen account gevonden met dit e-mailadres.',
+        'auth/wrong-password':         'Wachtwoord onjuist.',
+        'auth/too-many-requests':      'Te veel pogingen. Probeer later opnieuw.',
+        'auth/network-request-failed': 'Geen internetverbinding.',
+      }
     };
     errDiv.style.display = 'flex';
-    errMsg.textContent = msgs[err.code] || err.code + ': ' + err.message;
+    errMsg.textContent = (msgs[lang]||msgs.en)[err.code] || err.code + ': ' + err.message;
   }
 });
 
-// Wachtwoord vergeten
 document.getElementById('forgot-link').addEventListener('click', async (e) => {
   e.preventDefault();
   const email = document.getElementById('l-email').value.trim();
-  if (!email) { alert('Vul eerst je e-mailadres in.'); return; }
+  const lang  = document.documentElement.lang;
+  if (!email) {
+    alert(lang==='nl' ? 'Vul eerst je e-mailadres in.' : 'Please enter your email address first.');
+    return;
+  }
   try {
     await sendPasswordResetEmail(auth, email);
-    alert(`Reset-mail verstuurd naar ${email}. Controleer je inbox.`);
+    alert(lang==='nl'
+      ? `Reset-mail verstuurd naar ${email}. Controleer je inbox.`
+      : `Reset email sent to ${email}. Check your inbox.`);
   } catch {
-    alert('Kon geen reset-mail sturen. Controleer het e-mailadres.');
+    alert(lang==='nl' ? 'Kon geen reset-mail sturen.' : 'Could not send reset email.');
   }
 });
+</script>
+
+<script>
+let currentLang = localStorage.getItem('ghq_lang') || 'en';
+function applyLang() {
+  document.documentElement.lang = currentLang;
+  document.getElementById('lang-btn').textContent = currentLang === 'en' ? '🌐 NL' : '🌐 EN';
+  document.title = currentLang === 'nl' ? 'Inloggen – GuardianHQ' : 'Login – GuardianHQ';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = currentLang === 'nl' ? el.dataset.nl : el.dataset.en;
+  });
+}
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'nl' : 'en';
+  localStorage.setItem('ghq_lang', currentLang);
+  applyLang();
+}
+applyLang();
 </script>
 
 <script src="js/app.js"></script>
