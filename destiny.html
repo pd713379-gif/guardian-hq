@@ -429,12 +429,25 @@ const ACT_POOL = [
   {type:'dungeon',    name:'Warlord\'s Ruin',          det:{en:'Featured Dungeon', nl:'Featured Dungeon'}, badge:'Dungeon'},
 ];
 
-function renderActivities(acts) {
+function renderActivities(liveActs) {
   const grid = document.getElementById('activities-grid');
-  // Shuffle for rotation feel
-  const shuffled = acts.length >= 8 ? acts : [...acts, ...ACT_POOL].slice(0, 8);
-  const show = shuffled.slice(0, 8);
-  grid.innerHTML = show.map(a => {
+  
+  // Deduplicate live acts by type - max 2 raids
+  const typeCount = {};
+  const filtered = liveActs.filter(a => {
+    typeCount[a.type] = (typeCount[a.type] || 0) + 1;
+    if (a.type === 'raid' && typeCount[a.type] > 1) return false;
+    return true;
+  });
+
+  // Always add pool items for variety, avoiding duplicates
+  const liveTypes = new Set(filtered.map(a => a.type));
+  const poolExtras = ACT_POOL.filter(p => !liveTypes.has(p.type));
+  
+  // Mix: live first, then pool to fill 8 spots
+  const mixed = [...filtered, ...poolExtras].slice(0, 8);
+  
+  grid.innerHTML = mixed.map(a => {
     const img = ACT_IMG[a.type] || 'img/activities/vanguard.png';
     const bg  = a.pgcrImage ? `url('${a.pgcrImage}')` : `url('${img}')`;
     const bs  = BADGE_STYLE[a.type] || BADGE_STYLE.strike;
