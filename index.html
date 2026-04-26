@@ -758,17 +758,14 @@
     }
   }
 
-  async function sendPasswordResetMail(email) {
+  async function sendPasswordResetMail(email, resetLink) {
     try {
-      await emailjs.send('service_usefhy9', 'template_0ncr5h7', {
-        to_name:    'Guardian',
+      await emailjs.send('service_ztd1ojh', 'template_fykspxb', {
         to_email:   email,
         from_name:  'GuardianHQ',
-        subject:    'Wachtwoord Reset',
-        message:    'Klik op de link om je wachtwoord te resetten.',
-        login_url:  'https://guardian-hq-eight.vercel.app',
-        reply_to:   'noreply@guardianhq.gg'
-      });
+        reset_url:  resetLink,
+        reply_to:   'info.guardianhq@gmail.com'
+      }, 'pWDzQDxhFe0LD8ZpI');
     } catch (e) {
       console.error('EmailJS reset fout:', e);
     }
@@ -836,9 +833,13 @@
     const email = document.getElementById('login-email').value.trim();
     if (!email) { alert('Voer eerst je e-mailadres in.'); return; }
     try {
-      await sendPasswordResetEmail(auth, email);
-      // Stuur ook via EmailJS
-      await sendPasswordResetMail(email);
+      // Firebase genereert de reset link
+      await sendPasswordResetEmail(auth, email, {
+        url: 'https://guardian-hq-eight.vercel.app'
+      });
+      // Stuur mooie template via 2e EmailJS account
+      const resetLink = 'https://guardian-hq.firebaseapp.com/__/auth/action?mode=resetPassword';
+      await sendPasswordResetMail(email, resetLink);
       alert('✅ Wachtwoord reset link verstuurd naar ' + email);
     } catch (e) {
       alert('Fout: ' + e.message);
