@@ -1,31 +1,40 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Under Construction</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GuardianHQ - Under Construction</title>
   <style>
-    body {
+    /* Basis instellingen voor het hele scherm */
+    html, body {
       margin: 0;
-      /* Een rustige donkere kleur in plaats van dat felle rood */
-      background-color: #222; 
-      overflow: hidden;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #1a1a1a; /* Donkere achtergrond voor tijdens het laden */
+      overflow: hidden; /* Geen scrollbalken */
     }
-    img {
+
+    .fullscreen-image {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      object-fit: cover;
-      object-position: center top;
+      /* 'cover' vult het hele scherm zonder vervorming */
+      object-fit: cover; 
+      /* 'center 0%' zorgt dat de bovenkant (de kranen) altijd zichtbaar is */
+      object-position: center 0%;
     }
   </style>
 </head>
 <body>
 
-  <!-- We proberen eerst even deze stabiele test-afbeelding -->
-  <img src="https://unsplash.com" alt="Bouwplaats">
+  <img 
+    class="fullscreen-image"
+    src="https://vercel.app"
+    alt="GuardianHQ Under Construction"
+  />
 
 </body>
 </html>
-
