@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inloggen — GuardianHQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #f5c842;
+  --blue: #4fc3f7;
+  --bg-deep: #04050a;
+  --bg-dark: #0b0e17;
+  --bg-glass: rgba(15,20,40,0.6);
+  --bg-card: rgba(20,28,55,0.5);
+  --border-gold: rgba(245,200,66,0.2);
+  --border-white: rgba(255,255,255,0.07);
+  --text-primary: #e6ebff;
+  --text-muted: #7c86a2;
+  --success: #2ed573;
+  --danger: #ff4757;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:'Rajdhani',sans-serif;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-layer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(79,195,247,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 20%,rgba(245,200,66,0.05) 0%,transparent 55%)}
+.bg-layer::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(79,195,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(79,195,247,0.03) 1px,transparent 1px);background-size:50px 50px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(4,5,10,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand img{width:32px;height:32px;object-fit:contain}
+.nav-brand span{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:var(--gold);letter-spacing:.15em}
+.nav-status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--success);margin-left:auto}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* PAGE */
+.page{position:relative;z-index:1;padding-top:60px;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 1.5rem 2rem}
+
+/* CARD */
+.login-card{width:100%;max-width:440px;background:var(--bg-glass);backdrop-filter:blur(20px);border:1px solid var(--border-gold);border-radius:12px;overflow:hidden}
+.card-top{background:rgba(245,200,66,0.04);border-bottom:1px solid var(--border-gold);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.card-node{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.15em}
+.card-status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--success)}
+.card-body{padding:2.5rem 2rem}
+.card-logo{text-align:center;margin-bottom:2rem}
+.card-logo img{width:60px;height:60px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(245,200,66,0.3))}
+.card-title{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:var(--gold);letter-spacing:.15em;text-align:center;margin-bottom:.3rem}
+.card-sub{font-size:.8rem;color:var(--text-muted);text-align:center;margin-bottom:2rem}
+
+/* TABS */
+.tabs{display:flex;border:1px solid var(--border-gold);border-radius:6px;overflow:hidden;margin-bottom:1.5rem}
+.tab{flex:1;padding:9px;background:transparent;border:none;color:var(--text-muted);font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.tab.active{background:rgba(245,200,66,0.1);color:var(--gold)}
+
+/* FORM */
+.form-group{margin-bottom:1rem}
+.form-label{display:block;margin-bottom:6px;font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em}
+.form-input{width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-white);border-radius:6px;color:var(--text-primary);font-family:'Rajdhani',sans-serif;font-size:1rem;transition:border-color .2s;outline:none}
+.form-input:focus{border-color:var(--gold);background:rgba(245,200,66,0.02)}
+.form-input::placeholder{color:var(--text-muted)}
+.forgot{text-align:right;margin-bottom:.8rem}
+.forgot a{font-size:.72rem;color:var(--text-muted);text-decoration:none;transition:color .2s}
+.forgot a:hover{color:var(--gold)}
+
+/* BUTTONS */
+.btn-full{width:100%;padding:13px;background:linear-gradient(135deg,var(--gold) 0%,#d4960a 100%);border:none;border-radius:6px;color:#04050a;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:.3rem}
+.btn-full:hover{opacity:.9;transform:translateY(-1px)}
+.btn-full:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.divider{display:flex;align-items:center;gap:12px;margin:1.2rem 0;color:var(--text-muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
+.btn-bungie{width:100%;padding:13px;background:rgba(79,195,247,0.07);border:1px solid rgba(79,195,247,0.25);border-radius:6px;color:var(--blue);font-family:'Orbitron',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.btn-bungie:hover{background:rgba(79,195,247,0.14)}
+
+/* ALERTS */
+.alert{padding:10px 14px;border-radius:6px;font-size:.82rem;margin-bottom:1rem;display:none}
+.alert-err{background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.3);color:var(--danger)}
+.alert-ok{background:rgba(46,213,115,0.1);border:1px solid rgba(46,213,115,0.3);color:var(--success)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:1.5rem;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;border-top:1px solid var(--border-gold);margin-top:auto}
+footer span{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <img src="img/logo/mail.png" alt="GuardianHQ">
+    <span>GuardianHQ</span>
+  </a>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    <span>SERVERS ONLINE</span>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="login-card">
+    <div class="card-top">
+      <span class="card-node">[GHQ-SECURE-NODE]</span>
+      <div class="card-status"><div class="status-dot"></div>TRANSMISSION ACTIVE</div>
+    </div>
+    <div class="card-body">
+      <div class="card-logo">
+        <img src="img/logo/mail.png" alt="GuardianHQ">
+      </div>
+      <div class="card-title">GUARDIANHQ</div>
+      <div class="card-sub">Secure Vanguard Network</div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('login')">Inloggen</button>
+        <button class="tab" onclick="switchTab('register')">Registreren</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="tab-login">
+        <div class="alert alert-err" id="login-err"></div>
+        <div class="alert alert-ok" id="login-ok"></div>
+        <div class="form-group">
+          <label class="form-label">E-mailadres</label>
+          <input type="email" class="form-input" id="login-email" placeholder="guardian@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Wachtwoord</label>
+          <input type="password" class="form-input" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <div class="forgot"><a href="#" onclick="doReset()">Wachtwoord vergeten?</a></div>
+        <button class="btn-full" id="login-btn" onclick="doLogin()">INLOGGEN</button>
+        <div class="divider">of</div>
+        <button class="btn-bungie" onclick="bungieOAuth()">⚡ Inloggen met Bungie.net</button>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="tab-register" style="display:none">
+        <div class="alert alert-err" id="reg-err"></div>
+        <div class="alert alert-ok" id="reg-ok"></div>
+        <div class="form-group">
+          <label class="form-label">Guardian Naam</label>
+          <input type="text" class="form-input" id="reg-name" placeholder="Guardian#1234">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mailadres</label>
+          <input type="email" class="form-input" id="reg-email" placeholder="guardian@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Wachtwoord</label>
+          <input type="password" class="form-input" id="reg-pass" placeholder="Minimaal 8 tekens" onkeydown="if(event.key==='Enter')doRegister()">
+        </div>
+        <button class="btn-full" id="reg-btn" onclick="doRegister()">ACCOUNT AANMAKEN</button>
+        <div class="divider">of</div>
+        <button class="btn-bungie" onclick="bungieOAuth()">⚡ Registreren met Bungie.net</button>
+        <p style="font-size:.7rem;color:var(--text-muted);text-align:center;margin-top:1rem;line-height:1.5">Je ontvangt een welkomstmail met je inloggegevens na registratie.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><span>GuardianHQ</span> · Encrypted Relay System · Node Active</footer>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('Kzu6sQd_AB5cDC0nU');</script>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+const app = initializeApp({
+  apiKey:"AIzaSyDuXkAWvoEcihAtZAO4MF0jrWY96v5HzIM",
+  authDomain:"guardian-hq.firebaseapp.com",
+  projectId:"guardian-hq",
+  storageBucket:"guardian-hq.firebasestorage.app",
+  messagingSenderId:"588080926580",
+  appId:"1:588080926580:web:2e92b539a9fd78e83be621"
+});
+const auth = getAuth(app);
+
+// Als al ingelogd → direct naar profiel
+onAuthStateChanged(auth, user => {
+  if(user) window.location.href = 'profile.html';
+});
+
+function showErr(id, msg){ const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; }
+function showOk(id, msg){ const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; }
+function hideAlerts(){ ['login-err','login-ok','reg-err','reg-ok'].forEach(id=>document.getElementById(id).style.display='none'); }
+
+window.doLogin = async function(){
+  hideAlerts();
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  if(!email||!pass){ showErr('login-err','Vul alle velden in.'); return; }
+  const btn = document.getElementById('login-btn');
+  btn.disabled=true; btn.textContent='LADEN...';
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    window.location.href = 'profile.html';
+  } catch(e){
+    let msg = 'Inloggen mislukt.';
+    if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'||e.code==='auth/invalid-credential') msg='Onjuist e-mailadres of wachtwoord.';
+    if(e.code==='auth/too-many-requests') msg='Te veel pogingen. Probeer later opnieuw.';
+    showErr('login-err', msg);
+    btn.disabled=false; btn.textContent='INLOGGEN';
+  }
+};
+
+window.doRegister = async function(){
+  hideAlerts();
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-pass').value;
+  if(!name||!email||!pass){ showErr('reg-err','Vul alle velden in.'); return; }
+  if(pass.length<8){ showErr('reg-err','Wachtwoord moet minimaal 8 tekens zijn.'); return; }
+  const btn = document.getElementById('reg-btn');
+  btn.disabled=true; btn.textContent='LADEN...';
+  try{
+    await createUserWithEmailAndPassword(auth, email, pass);
+    // Welkomstmail via EmailJS
+    await emailjs.send('service_usefhy9','template_zbd4wpc',{
+      to_name: name, to_email: email,
+      from_name: 'GuardianHQ', username: email,
+      password: pass, login_url: 'https://guardian-hq-eight.vercel.app/login.html'
+    });
+    showOk('reg-ok','✓ Account aangemaakt! Check je e-mail. Je wordt doorgestuurd...');
+    setTimeout(()=> window.location.href='profile.html', 2500);
+  } catch(e){
+    let msg = 'Registratie mislukt.';
+    if(e.code==='auth/email-already-in-use') msg='Dit e-mailadres is al in gebruik.';
+    if(e.code==='auth/invalid-email') msg='Ongeldig e-mailadres.';
+    showErr('reg-err', msg);
+    btn.disabled=false; btn.textContent='ACCOUNT AANMAKEN';
+  }
+};
+
+window.doReset = async function(){
+  hideAlerts();
+  const email = document.getElementById('login-email').value.trim();
+  if(!email){ showErr('login-err','Voer eerst je e-mailadres in.'); return; }
+  try{
+    await sendPasswordResetEmail(auth, email, { url:'https://guardian-hq-eight.vercel.app/login.html' });
+    await emailjs.send('service_ztd1ojh','template_fykspxb',{
+      to_email: email, from_name: 'GuardianHQ',
+      reset_url: 'https://guardian-hq.firebaseapp.com/__/auth/action?mode=resetPassword',
+      reply_to: 'info.guardianhq@gmail.com'
+    }, 'pWDzQDxhFe0LD8ZpI');
+    showOk('login-ok','✓ Reset link verstuurd naar ' + email);
+  } catch(e){
+    showErr('login-err','Fout: ' + e.message);
+  }
+};
+
+window.bungieOAuth = function(){
+  const state = Math.random().toString(36).slice(2);
+  sessionStorage.setItem('bungie_state', state);
+  window.location.href = `https://www.bungie.net/en/OAuth/Authorize?client_id=52072&response_type=code&state=${state}&redirect_uri=${encodeURIComponent('https://guardian-hq-eight.vercel.app/auth/callback')}`;
+};
+</script>
+
+<script>
+function switchTab(tab){
+  document.getElementById('tab-login').style.display    = tab==='login'    ? 'block' : 'none';
+  document.getElementById('tab-register').style.display = tab==='register' ? 'block' : 'none';
+  document.querySelectorAll('.tab').forEach((b,i)=> b.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
+}
+</script>
+</body>
+</html>
