@@ -1,38 +1,20 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test Pagina</title>
-
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      background: gray; /* Tijdelijk grijs om te zien of de pagina laadt */
-      overflow: hidden;
-    }
-
-    .fullscreen-image {
+    body { margin: 0; background: red; } /* Rood zodat we ZIEN dat de code werkt */
+    img {
       position: fixed;
-      top: 0;
-      left: 0;
       width: 100vw;
       height: 100vh;
       object-fit: cover;
-      object-position: center 0%;
+      object-position: top;
     }
   </style>
 </head>
-
 <body>
-  <!-- Ik heb hier een test-afbeelding geplaatst om te kijken of je code werkt -->
-  <img 
-    class="fullscreen-image"
-    src="https://picsum.photos"
-    alt="Test Image"
-  />
+
+  <img src="https://vercel.app">
+
 </body>
 </html>
