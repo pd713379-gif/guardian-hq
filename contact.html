@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — GuardianHQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c842;--blue:#4fc3f7;--bg-deep:#04050a;--bg-glass:rgba(15,20,40,0.6);--bg-card:rgba(20,28,55,0.5);--border-gold:rgba(245,200,66,0.2);--border-blue:rgba(79,195,247,0.2);--border-white:rgba(255,255,255,0.07);--text-primary:#e6ebff;--text-muted:#7c86a2;--success:#2ed573;--danger:#ff4757;--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-layer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(79,195,247,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 20%,rgba(245,200,66,0.05) 0%,transparent 55%)}
+.bg-layer::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(79,195,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(79,195,247,0.03) 1px,transparent 1px);background-size:50px 50px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(4,5,10,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand img{width:32px;height:32px;object-fit:contain}
+.nav-brand-text{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:var(--gold);letter-spacing:.15em}
+.nav-links{display:flex;align-items:center;gap:.25rem;flex:1}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px;border-radius:6px;transition:all .2s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(245,200,66,0.07)}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--success)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-nav{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .2s;text-decoration:none;border:1px solid var(--border-gold);color:var(--text-muted);background:transparent}
+.btn-nav:hover{color:var(--gold);border-color:var(--gold)}
+.btn-nav.primary{background:var(--gold);color:#04050a;border-color:var(--gold);font-weight:700}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* PAGE */
+.page-wrap{position:relative;z-index:1;padding-top:60px}
+
+/* HERO */
+.page-hero{padding:3.5rem 2rem 3rem;text-align:center;border-bottom:1px solid var(--border-gold)}
+.hero-tag{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--blue);letter-spacing:.2em;margin-bottom:1rem;display:block}
+.page-hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.5rem);font-weight:900;color:var(--gold);letter-spacing:.15em;margin-bottom:.8rem}
+.page-hero p{color:var(--text-muted);max-width:520px;margin:0 auto;font-size:.95rem;line-height:1.7}
+
+/* CONTENT */
+.content{max-width:780px;margin:0 auto;padding:3rem 2rem}
+
+/* FORM CARD */
+.glass{background:var(--bg-glass);backdrop-filter:blur(16px);border:1px solid var(--border-gold);border-radius:var(--radius);overflow:hidden}
+.panel-head{background:rgba(245,200,66,0.04);border-bottom:1px solid var(--border-gold);padding:11px 18px;display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';width:3px;height:12px;background:var(--gold);display:block;border-radius:2px}
+
+.form-body{padding:2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:500px){.form-row{grid-template-columns:1fr}}
+.form-group{margin-bottom:1rem}
+.form-label{display:block;margin-bottom:6px;font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em}
+.form-input{width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-white);border-radius:6px;color:var(--text-primary);font-family:'Rajdhani',sans-serif;font-size:1rem;transition:border-color .2s;outline:none}
+.form-input:focus{border-color:var(--gold);background:rgba(245,200,66,0.02)}
+.form-input::placeholder{color:var(--text-muted)}
+textarea.form-input{resize:vertical;min-height:130px;line-height:1.5}
+
+.btn-send{width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),#d4960a);border:none;border-radius:6px;color:#04050a;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-send:hover{opacity:.9;transform:translateY(-1px)}
+.btn-send:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ALERTS */
+.alert{padding:12px 16px;border-radius:6px;font-size:.85rem;margin-top:1rem;display:none;text-align:center}
+.alert-ok{background:rgba(46,213,115,.1);border:1px solid rgba(46,213,115,.3);color:var(--success)}
+.alert-err{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);color:var(--danger)}
+
+/* INFO CARDS */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+@media(max-width:500px){.info-grid{grid-template-columns:1fr}}
+.info-card{background:var(--bg-glass);backdrop-filter:blur(12px);border:1px solid var(--border-gold);border-radius:var(--radius);padding:1.5rem;text-align:center;transition:border-color .2s}
+.info-card:hover{border-color:rgba(245,200,66,.4)}
+.info-icon{font-size:1.6rem;margin-bottom:.6rem}
+.info-label{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.info-val{font-size:.88rem;color:var(--text-primary);font-weight:600}
+.info-val a{color:var(--blue);text-decoration:none}
+.info-val a:hover{text-decoration:underline}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:1.5rem;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;border-top:1px solid var(--border-gold);margin-top:3rem}
+footer span{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <img src="img/logo/mail.png" alt="GuardianHQ">
+    <span class="nav-brand-text">GuardianHQ</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="info.html">Info</a>
+    <a href="destiny.html">Destiny 2</a>
+    <a href="profile.html">Profiel</a>
+    <a href="contact.html" class="active">Contact</a>
+    <a href="discord.html">Discord</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-status"><div class="status-dot"></div><span>ONLINE</span></div>
+    <a href="login.html" class="btn-nav" id="nav-login">Inloggen</a>
+    <a href="profile.html" class="btn-nav primary" id="nav-profile" style="display:none">Profiel</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="page-hero">
+    <span class="hero-tag">⬡ INCOMING TRANSMISSION</span>
+    <h1>STUUR EEN BERICHT</h1>
+    <p>Heb je een vraag, suggestie of bug gevonden? Laat het ons weten — we reageren zo snel mogelijk.</p>
+  </div>
+
+  <div class="content">
+
+    <!-- FORM -->
+    <div class="glass">
+      <div class="panel-head">
+        <span class="panel-title">📬 Contact Formulier</span>
+        <div class="status-dot"></div>
+      </div>
+      <div class="form-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Naam</label>
+            <input type="text" class="form-input" id="c-name" placeholder="Guardian#1234">
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-mailadres</label>
+            <input type="email" class="form-input" id="c-email" placeholder="guardian@example.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Onderwerp</label>
+          <input type="text" class="form-input" id="c-subject" placeholder="Vraag / Bug / Suggestie / Feedback">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bericht</label>
+          <textarea class="form-input" id="c-message" placeholder="Schrijf hier je bericht..."></textarea>
+        </div>
+        <button class="btn-send" id="send-btn" onclick="sendContact()">
+          📡 Verstuur Bericht
+        </button>
+        <div class="alert alert-ok" id="alert-ok">✓ Bericht verzonden! We nemen zo snel mogelijk contact op.</div>
+        <div class="alert alert-err" id="alert-err"></div>
+      </div>
+    </div>
+
+    <!-- INFO CARDS -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">📧</div>
+        <div class="info-label">Email</div>
+        <div class="info-val"><a href="mailto:info.guardianhq@gmail.com">info.guardianhq@gmail.com</a></div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">💬</div>
+        <div class="info-label">Discord</div>
+        <div class="info-val"><a href="discord.html">Join de community server</a></div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">⏱️</div>
+        <div class="info-label">Reactietijd</div>
+        <div class="info-val">Binnen 24-48 uur</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🛡️</div>
+        <div class="info-label">Support</div>
+        <div class="info-val">Account & Technisch</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer><span>GuardianHQ</span> · Encrypted Relay System · Node Active · Not affiliated with Bungie, Inc.</footer>
+</div>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+emailjs.init('Kzu6sQd_AB5cDC0nU');
+
+async function sendContact() {
+  const name    = document.getElementById('c-name').value.trim();
+  const email   = document.getElementById('c-email').value.trim();
+  const subject = document.getElementById('c-subject').value.trim();
+  const message = document.getElementById('c-message').value.trim();
+
+  document.getElementById('alert-ok').style.display  = 'none';
+  document.getElementById('alert-err').style.display = 'none';
+
+  if(!name || !email || !subject || !message) {
+    document.getElementById('alert-err').textContent = 'Vul alle velden in.';
+    document.getElementById('alert-err').style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Verzenden...';
+
+  try {
+    await emailjs.send('service_usefhy9', 'template_0ncr5h7', {
+      from_name:  name,
+      from_email: email,
+      subject:    subject,
+      message:    message,
+      reply_to:   email
+    });
+    document.getElementById('alert-ok').style.display = 'block';
+    document.getElementById('c-name').value    = '';
+    document.getElementById('c-email').value   = '';
+    document.getElementById('c-subject').value = '';
+    document.getElementById('c-message').value = '';
+    btn.innerHTML = '✓ Verstuurd!';
+    setTimeout(() => { btn.disabled = false; btn.innerHTML = '📡 Verstuur Bericht'; }, 3000);
+  } catch(e) {
+    document.getElementById('alert-err').textContent = 'Fout bij verzenden. Probeer het opnieuw.';
+    document.getElementById('alert-err').style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '📡 Verstuur Bericht';
+  }
+}
+</script>
+
+<!-- FIREBASE auth check -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+const app = initializeApp({
+  apiKey:"AIzaSyDuXkAWvoEcihAtZAO4MF0jrWY96v5HzIM",
+  authDomain:"guardian-hq.firebaseapp.com",
+  projectId:"guardian-hq",
+  storageBucket:"guardian-hq.firebasestorage.app",
+  messagingSenderId:"588080926580",
+  appId:"1:588080926580:web:2e92b539a9fd78e83be621"
+});
+const auth = getAuth(app);
+onAuthStateChanged(auth, user => {
+  if(user) {
+    document.getElementById('nav-login').style.display   = 'none';
+    document.getElementById('nav-profile').style.display = 'inline-flex';
+  }
+});
+</script>
+</body>
+</html>
