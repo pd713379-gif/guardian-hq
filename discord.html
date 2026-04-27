@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discord — GuardianHQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c842;--blue:#4fc3f7;--discord:#5865f2;--bg-deep:#04050a;--bg-glass:rgba(15,20,40,0.6);--bg-card:rgba(20,28,55,0.5);--border-gold:rgba(245,200,66,0.2);--border-blue:rgba(79,195,247,0.2);--border-disc:rgba(88,101,242,0.3);--border-white:rgba(255,255,255,0.07);--text-primary:#e6ebff;--text-muted:#7c86a2;--success:#2ed573;--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-layer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(88,101,242,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 20%,rgba(245,200,66,0.05) 0%,transparent 55%)}
+.bg-layer::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(79,195,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(79,195,247,0.03) 1px,transparent 1px);background-size:50px 50px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(4,5,10,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand img{width:32px;height:32px;object-fit:contain}
+.nav-brand-text{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:var(--gold);letter-spacing:.15em}
+.nav-links{display:flex;align-items:center;gap:.25rem;flex:1}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px;border-radius:6px;transition:all .2s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(245,200,66,0.07)}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--success)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-nav{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .2s;text-decoration:none;border:1px solid var(--border-gold);color:var(--text-muted);background:transparent}
+.btn-nav:hover{color:var(--gold);border-color:var(--gold)}
+.btn-nav.primary{background:var(--gold);color:#04050a;border-color:var(--gold);font-weight:700}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* PAGE */
+.page-wrap{position:relative;z-index:1;padding-top:60px}
+
+/* HERO */
+.hero{min-height:calc(65vh);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;border-bottom:1px solid var(--border-gold)}
+.live-pill{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--success);border:1px solid rgba(46,213,115,.3);background:rgba(46,213,115,.06);padding:5px 16px;border-radius:20px;margin-bottom:2rem;letter-spacing:.1em}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:blink 2s infinite}
+.discord-icon{width:90px;height:90px;border-radius:50%;background:rgba(88,101,242,0.12);border:2px solid var(--border-disc);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.5rem;box-shadow:0 0 40px rgba(88,101,242,0.2)}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;letter-spacing:.08em;margin-bottom:.5rem;line-height:1.2}
+.hero h1 span{color:var(--gold)}
+.hero p{color:var(--text-muted);max-width:560px;margin:1rem auto 2.5rem;font-size:1rem;line-height:1.75}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn-discord{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,#5865f2,#4752c4);border:none;border-radius:8px;color:#fff;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .25s}
+.btn-discord:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(88,101,242,0.45)}
+.btn-outline{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:transparent;border:1px solid var(--border-gold);border-radius:8px;color:var(--text-primary);font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .25s}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+
+/* STATS */
+.stats-strip{display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;padding:2.5rem 2rem;border-bottom:1px solid var(--border-gold);background:rgba(88,101,242,0.02)}
+.stat-item{text-align:center}
+.stat-num{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;color:var(--gold);display:block}
+.stat-label{font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;display:block}
+
+/* FEATURES */
+.features{max-width:1000px;margin:0 auto;padding:4rem 2rem}
+.sec-tag{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--blue);letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:.8rem;text-align:center}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:700;color:var(--text-primary);letter-spacing:.08em;text-align:center;margin-bottom:3rem}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-bottom:3rem}
+.feat-card{background:var(--bg-glass);backdrop-filter:blur(12px);border:1px solid var(--border-gold);border-radius:var(--radius);padding:1.8rem;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--discord),transparent);opacity:0;transition:opacity .3s}
+.feat-card:hover{transform:translateY(-4px);border-color:rgba(88,101,242,.4)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{font-size:2rem;margin-bottom:1rem;display:block}
+.feat-name{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+.feat-desc{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+
+/* CTA BOX */
+.cta-box{background:var(--bg-glass);backdrop-filter:blur(16px);border:1px solid var(--border-disc);border-radius:var(--radius);padding:3rem 2rem;text-align:center;margin-bottom:3rem}
+.cta-box h2{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:var(--text-primary);letter-spacing:.1em;margin-bottom:.6rem}
+.cta-box p{color:var(--text-muted);font-size:.92rem;margin-bottom:2rem;line-height:1.6}
+
+/* GAME STATUS */
+.game-status{max-width:1000px;margin:0 auto;padding:0 2rem 4rem}
+.glass{background:var(--bg-glass);backdrop-filter:blur(16px);border:1px solid var(--border-gold);border-radius:var(--radius);overflow:hidden}
+.panel-head{background:rgba(245,200,66,0.04);border-bottom:1px solid var(--border-gold);padding:11px 18px;display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';width:3px;height:12px;background:var(--gold);display:block;border-radius:2px}
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px}
+.status-cell{padding:16px 20px;background:var(--bg-card)}
+.status-label{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.status-val{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:600}
+.val-green{color:var(--success)}.val-gold{color:var(--gold)}.val-blue{color:var(--blue)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:1.5rem;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;border-top:1px solid var(--border-gold)}
+footer span{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <img src="img/logo/mail.png" alt="GuardianHQ">
+    <span class="nav-brand-text">GuardianHQ</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="info.html">Info</a>
+    <a href="destiny.html">Destiny 2</a>
+    <a href="profile.html">Profiel</a>
+    <a href="contact.html">Contact</a>
+    <a href="discord.html" class="active">Discord</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-status"><div class="status-dot"></div><span>ONLINE</span></div>
+    <a href="login.html" class="btn-nav" id="nav-login">Inloggen</a>
+    <a href="profile.html" class="btn-nav primary" id="nav-profile" style="display:none">Profiel</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="live-pill"><div class="live-dot"></div>COMMUNITY LIVE · FIRETEAMS ACTIEF</div>
+    <div class="discord-icon">🎮</div>
+    <h1>Join <span>The Tower</span><br>Build your fireteam.</h1>
+    <p>Vind Guardians, run raids, speel strikes en bouw jouw Destiny 2 community op één plek. GuardianHQ Discord is jouw hub voor teamwork, clan vibes en endgame runs.</p>
+    <div class="hero-btns">
+      <a href="https://discord.gg/3jXMneeY" target="_blank" class="btn-discord">🎮 Join Discord Server</a>
+      <a href="destiny.html" class="btn-outline">⚔️ Bekijk Destiny 2</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-item"><span class="stat-num">24/7</span><span class="stat-label">Community Actief</span></div>
+    <div class="stat-item"><span class="stat-num">🏰</span><span class="stat-label">Raids & Dungeons</span></div>
+    <div class="stat-item"><span class="stat-num">🎯</span><span class="stat-label">PvP & Trials</span></div>
+    <div class="stat-item"><span class="stat-num">👥</span><span class="stat-label">Clan & Events</span></div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <span class="sec-tag">⬡ Wat je vindt in onze Discord</span>
+    <h2 class="sec-title">Assemble Your Squad</h2>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="feat-icon">⚔️</span>
+        <div class="feat-name">Raids</div>
+        <p class="feat-desc">Endgame teams voor alle raids. Van Last Wish tot Root of Nightmares. LFG kanalen per raid.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🏰</span>
+        <div class="feat-name">Dungeons</div>
+        <p class="feat-desc">Snelle LFG voor alle dungeons. Solo flawless zoeken of een carry nodig? Je vindt het hier.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🎯</span>
+        <div class="feat-name">PvP & Trials</div>
+        <p class="feat-desc">Trials of Osiris teams, comp scrims en coaching voor alle skill levels. Flawless guaranteed.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🌀</span>
+        <div class="feat-name">Gambit</div>
+        <p class="feat-desc">Prime Mover squads en Dredgen grind teams. Samen is de infamy grind een stuk makkelijker.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📡</span>
+        <div class="feat-name">Nieuws & Updates</div>
+        <p class="feat-desc">Live Bungie nieuws, TWAB notificaties en event aankondigingen direct in Discord.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">👥</span>
+        <div class="feat-name">Clan & Community</div>
+        <p class="feat-desc">Weekly events, community challenges en een actieve clan voor echte Guardians.</p>
+      </div>
+    </div>
+
+    <!-- CTA BOX -->
+    <div class="cta-box">
+      <h2>Klaar om te joinen?</h2>
+      <p>Gratis joinen — binnen 1 minuut ben je lid van de GuardianHQ community.</p>
+      <a href="https://discord.gg/3jXMneeY" target="_blank" class="btn-discord" style="display:inline-flex">
+        🎮 Join Nu — Gratis
+      </a>
+    </div>
+  </section>
+
+  <!-- GAME STATUS -->
+  <div class="game-status">
+    <div class="glass">
+      <div class="panel-head">
+        <span class="panel-title">📊 Live Game Status</span>
+        <div class="status-dot"></div>
+      </div>
+      <div class="status-grid">
+        <div class="status-cell"><div class="status-label">Server Status</div><div class="status-val val-green">● ONLINE</div></div>
+        <div class="status-cell"><div class="status-label">Huidig Seizoen</div><div class="status-val val-gold">Season 24</div></div>
+        <div class="status-cell"><div class="status-label">Weekly Reset</div><div class="status-val val-blue" id="reset-timer">--d --h --m</div></div>
+        <div class="status-cell"><div class="status-label">Actieve Spelers</div><div class="status-val">482K+</div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer><span>GuardianHQ</span> · Encrypted Relay System · Node Active · Not affiliated with Bungie, Inc.</footer>
+</div>
+
+<!-- FIREBASE auth check -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+const app = initializeApp({
+  apiKey:"AIzaSyDuXkAWvoEcihAtZAO4MF0jrWY96v5HzIM",
+  authDomain:"guardian-hq.firebaseapp.com",
+  projectId:"guardian-hq",
+  storageBucket:"guardian-hq.firebasestorage.app",
+  messagingSenderId:"588080926580",
+  appId:"1:588080926580:web:2e92b539a9fd78e83be621"
+});
+const auth = getAuth(app);
+onAuthStateChanged(auth, user => {
+  if(user) {
+    document.getElementById('nav-login').style.display   = 'none';
+    document.getElementById('nav-profile').style.display = 'inline-flex';
+  }
+});
+</script>
+
+<script>
+function updateReset(){
+  const now=new Date(),next=new Date(now);
+  const diff=(2-now.getUTCDay()+7)%7||7;
+  next.setUTCDate(now.getUTCDate()+diff);
+  next.setUTCHours(17,0,0,0);
+  const r=next-now;
+  const d=Math.floor(r/86400000),h=Math.floor((r%86400000)/3600000),m=Math.floor((r%3600000)/60000);
+  document.getElementById('reset-timer').textContent=d+'d '+h+'h '+m+'m';
+}
+updateReset();
+setInterval(updateReset,60000);
+</script>
+</body>
+</html>
