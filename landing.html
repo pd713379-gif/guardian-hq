@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GuardianHQ - Under Construction</title>
+  <title>Under Construction</title>
+
   <style>
-    /* Basis instellingen voor het hele scherm */
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       width: 100%;
-      background-color: #1a1a1a; /* Donkere achtergrond voor tijdens het laden */
-      overflow: hidden; /* Geen scrollbalken */
+      background: black;
+      overflow: hidden;
     }
 
     .fullscreen-image {
@@ -21,20 +21,18 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      /* 'cover' vult het hele scherm zonder vervorming */
+      /* 'cover' zorgt dat het scherm altijd volledig gevuld is */
       object-fit: cover; 
-      /* 'center 0%' zorgt dat de bovenkant (de kranen) altijd zichtbaar is */
-      object-position: center 0%;
+      object-position: center;
     }
   </style>
 </head>
-<body>
 
+<body>
   <img 
     class="fullscreen-image"
-    src="https://vercel.app"
-    alt="GuardianHQ Under Construction"
+    src="https://guardian-hq-eight.vercel.app/img/under_construction.webp"
+    alt="Under Construction"
   />
-
 </body>
 </html>
