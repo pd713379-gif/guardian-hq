@@ -1,1 +1,147 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Info — GuardianHQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c842;--blue:#4fc3f7;--bg-deep:#04050a;--bg-glass:rgba(15,20,40,0.6);--bg-card:rgba(20,28,55,0.5);--border-gold:rgba(245,200,66,0.2);--border-blue:rgba(79,195,247,0.2);--text-primary:#e6ebff;--text-muted:#7c86a2;--success:#2ed573;--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-layer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(79,195,247,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 20%,rgba(245,200,66,0.05) 0%,transparent 55%)}
+.bg-layer::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(79,195,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(79,195,247,0.03) 1px,transparent 1px);background-size:50px 50px}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(4,5,10,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-gold);display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand img{width:32px;height:32px;object-fit:contain}
+.nav-brand-text{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:var(--gold);letter-spacing:.15em}
+.nav-links{display:flex;align-items:center;gap:.25rem;flex:1}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px;border-radius:6px;transition:all .2s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(245,200,66,0.07)}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--success)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-nav{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .2s;text-decoration:none;border:1px solid var(--border-gold);color:var(--text-muted);background:transparent}
+.btn-nav:hover{color:var(--gold);border-color:var(--gold)}
+.btn-nav.primary{background:var(--gold);color:#04050a;border-color:var(--gold);font-weight:700}
+@media(max-width:768px){.nav-links{display:none}}
+.page-wrap{position:relative;z-index:1;padding-top:60px}
+.page-hero{padding:4rem 2rem 3rem;text-align:center;border-bottom:1px solid var(--border-gold)}
+.hero-tag{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--blue);letter-spacing:.2em;margin-bottom:1rem;display:block}
+.page-hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:900;color:var(--gold);letter-spacing:.15em;margin-bottom:.8rem}
+.page-hero p{color:var(--text-muted);max-width:580px;margin:0 auto;font-size:.98rem;line-height:1.75}
+.content{max-width:1100px;margin:0 auto;padding:4rem 2rem}
+.sec-head{margin-bottom:2.5rem}
+.sec-line{width:44px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:.8rem}
+.sec-head h2{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text-primary);letter-spacing:.1em;margin-bottom:.3rem}
+.sec-head p{color:var(--text-muted);font-size:.88rem}
+.feat-list{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:4rem}
+.feat-row{display:grid;grid-template-columns:72px 1fr;gap:1.5rem;align-items:start;background:var(--bg-glass);backdrop-filter:blur(12px);border:1px solid var(--border-gold);border-radius:var(--radius);padding:1.8rem;transition:border-color .2s}
+.feat-row:hover{border-color:rgba(245,200,66,.4)}
+@media(max-width:500px){.feat-row{grid-template-columns:1fr}}
+.feat-icon-big{width:64px;height:64px;border-radius:12px;background:rgba(245,200,66,.07);border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+.feat-body h3{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+.feat-body p{color:var(--text-muted);font-size:.9rem;line-height:1.65;margin-bottom:.8rem}
+.feat-tags{display:flex;flex-wrap:wrap;gap:6px}
+.badge{font-family:'Share Tech Mono',monospace;font-size:.6rem;padding:3px 9px;border-radius:3px;text-transform:uppercase;letter-spacing:.06em}
+.badge-gold{background:rgba(245,200,66,.12);color:var(--gold);border:1px solid rgba(245,200,66,.3)}
+.badge-blue{background:rgba(79,195,247,.12);color:var(--blue);border:1px solid rgba(79,195,247,.3)}
+.badge-green{background:rgba(46,213,115,.12);color:var(--success);border:1px solid rgba(46,213,115,.3)}
+.steps{display:flex;flex-direction:column;gap:1px;margin-bottom:4rem}
+.step{display:flex;gap:1.5rem;align-items:flex-start;padding:1.8rem;background:var(--bg-glass);backdrop-filter:blur(12px);border:1px solid var(--border-gold)}
+.step:first-child{border-radius:var(--radius) var(--radius) 0 0}
+.step:last-child{border-radius:0 0 var(--radius) var(--radius)}
+.step-num{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;color:var(--gold);opacity:.25;flex-shrink:0;line-height:1;width:44px}
+.step h3{font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:700;color:var(--text-primary);letter-spacing:.08em;margin-bottom:.4rem}
+.step p{font-size:.88rem;color:var(--text-muted);line-height:1.6}
+.roadmap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:4rem}
+.rm-card{background:var(--bg-glass);backdrop-filter:blur(12px);border:1px solid var(--border-gold);border-radius:var(--radius);padding:1.5rem}
+.rm-card h4{font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:600;color:var(--text-primary);letter-spacing:.08em;margin:.7rem 0 .3rem}
+.rm-card p{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+.cta{text-align:center;padding:3.5rem 2rem;background:rgba(245,200,66,.02);border:1px solid var(--border-gold);border-radius:var(--radius);margin-bottom:2rem}
+.cta h2{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--text-primary);letter-spacing:.1em;margin-bottom:.6rem}
+.cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:1.8rem}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px 26px;border-radius:6px;cursor:pointer;transition:all .25s;text-decoration:none;border:none}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#d4960a);color:#04050a}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,200,66,.35)}
+.btn-outline{background:transparent;border:1px solid var(--border-gold)!important;color:var(--text-primary)}
+.btn-outline:hover{border-color:var(--gold)!important;color:var(--gold)}
+footer{position:relative;z-index:1;text-align:center;padding:1.5rem;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;border-top:1px solid var(--border-gold);margin-top:1rem}
+footer span{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<nav>
+  <a class="nav-brand" href="index.html"><img src="img/logo/mail.png" alt="GuardianHQ"><span class="nav-brand-text">GuardianHQ</span></a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a><a href="info.html" class="active">Info</a><a href="destiny.html">Destiny 2</a><a href="profile.html">Profiel</a><a href="contact.html">Contact</a><a href="discord.html">Discord</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-status"><div class="status-dot"></div><span>ONLINE</span></div>
+    <a href="login.html" class="btn-nav" id="nav-login">Inloggen</a>
+    <a href="profile.html" class="btn-nav primary" id="nav-profile" style="display:none">Profiel</a>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="page-hero">
+    <span class="hero-tag">⬡ ALLES OP ÉÉN PLEK</span>
+    <h1>GEBOUWD VOOR DE ECHTE GUARDIAN</h1>
+    <p>GuardianHQ combineert live Destiny 2 data, community tools en Bungie integratie in één overzichtelijk command center.</p>
+  </div>
+  <div class="content">
+    <div class="sec-head"><div class="sec-line"></div><h2>Alle Features</h2><p>Wat je vindt in GuardianHQ</p></div>
+    <div class="feat-list">
+      <div class="feat-row"><div class="feat-icon-big">📡</div><div class="feat-body"><h3>Live Bungie News Feed</h3><p>Altijd up-to-date met het laatste nieuws rechtstreeks van Bungie.net. TWAB's, hotfixes en event aankondigingen worden automatisch opgehaald — nooit meer een update missen.</p><div class="feat-tags"><span class="badge badge-green">Live</span><span class="badge badge-blue">Auto-refresh</span><span class="badge badge-gold">Bungie API</span></div></div></div>
+      <div class="feat-row"><div class="feat-icon-big">📊</div><div class="feat-body"><h3>Live Game Status</h3><p>Bekijk real-time de server status van Destiny 2, actieve spelers, het huidige seizoen en een afteller naar de weekly en daily reset. Nooit meer verrast door maintenance.</p><div class="feat-tags"><span class="badge badge-green">Real-time</span><span class="badge badge-blue">Reset Timer</span></div></div></div>
+      <div class="feat-row"><div class="feat-icon-big">🎭</div><div class="feat-body"><h3>Xûr — Deze Week</h3><p>Elke week bijgewerkt. Zie precies wat Xûr verkoopt: zijn locatie, alle exotic items met type en prijs. Geen losse websites meer — alles direct op GuardianHQ.</p><div class="feat-tags"><span class="badge badge-gold">Wekelijks</span><span class="badge badge-blue">Exotic Items</span></div></div></div>
+      <div class="feat-row"><div class="feat-icon-big">📅</div><div class="feat-body"><h3>Activiteiten Vandaag</h3><p>Welke Nightfall, Lost Sector en events zijn er? GuardianHQ toont alle dagelijkse en wekelijkse activiteiten overzichtelijk met rewards en difficulty.</p><div class="feat-tags"><span class="badge badge-green">Dagelijks</span><span class="badge badge-gold">Pinnacle Rewards</span></div></div></div>
+      <div class="feat-row"><div class="feat-icon-big">⚔️</div><div class="feat-body"><h3>God Roll Wapens</h3><p>Community god rolls voor de huidige meta. Beste PvP en PvE perks overzichtelijk per wapen — altijd seizoen actueel.</p><div class="feat-tags"><span class="badge badge-gold">Meta</span><span class="badge badge-blue">PvP & PvE</span><span class="badge badge-green">Seizoen actueel</span></div></div></div>
+      <div class="feat-row"><div class="feat-icon-big">🛡️</div><div class="feat-body"><h3>Bungie Connect & Guardian Stats</h3><p>Koppel je Bungie account en bekijk live je power level, K/D, triumphs, speeltijd, characters en recente activiteiten. Jouw data, live weergegeven.</p><div class="feat-tags"><span class="badge badge-gold">OAuth</span><span class="badge badge-blue">Live Stats</span><span class="badge badge-green">Alle platforms</span></div></div></div>
+    </div>
 
+    <div class="sec-head"><div class="sec-line"></div><h2>Hoe werkt het?</h2><p>In 3 stappen toegang tot al je live Destiny 2 data</p></div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><h3>Maak een gratis account aan</h3><p>Registreer via e-mail. Geen creditcard nodig. Je ontvangt direct een welkomstmail met je inloggegevens.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div><h3>Koppel je Bungie account</h3><p>Via je profielpagina koppel je met één klik je Bungie account. Hiermee geef je GuardianHQ toegang tot je live Destiny 2 data.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div><h3>Bekijk je Guardian dashboard</h3><p>Zie je power level, characters, favoriete wapens, recente activiteiten en veel meer — allemaal live en automatisch bijgewerkt.</p></div></div>
+    </div>
+
+    <div class="sec-head"><div class="sec-line"></div><h2>Roadmap</h2><p>Wat er nu live is en wat er nog aankomt</p></div>
+    <div class="roadmap-grid">
+      <div class="rm-card"><span class="badge badge-green">✓ Live</span><h4>Live News Feed</h4><p>Bungie nieuws automatisch bijgewerkt</p></div>
+      <div class="rm-card"><span class="badge badge-green">✓ Live</span><h4>Game Status</h4><p>Server status & reset timers</p></div>
+      <div class="rm-card"><span class="badge badge-green">✓ Live</span><h4>Xûr Data</h4><p>Wekelijkse exotic verkoper</p></div>
+      <div class="rm-card"><span class="badge badge-green">✓ Live</span><h4>God Roll Wapens</h4><p>Meta builds PvP & PvE</p></div>
+      <div class="rm-card"><span class="badge badge-blue">In Progress</span><h4>Bungie OAuth</h4><p>Live guardian stats na inloggen</p></div>
+      <div class="rm-card"><span class="badge badge-blue">In Progress</span><h4>Live Activiteiten</h4><p>Dagelijks bijgewerkt via API</p></div>
+      <div class="rm-card"><span class="badge badge-gold">Binnenkort</span><h4>Clan Beheer</h4><p>Clan stats en leaderboards</p></div>
+      <div class="rm-card"><span class="badge badge-gold">Binnenkort</span><h4>Raid Tracker</h4><p>Raid completions en emblems</p></div>
+    </div>
+
+    <div class="cta">
+      <h2>Klaar, Guardian?</h2>
+      <p>Gratis account — volledige toegang tot alle huidige en toekomstige features.</p>
+      <div class="cta-btns">
+        <a href="login.html" class="btn btn-gold">⚡ Account Aanmaken</a>
+        <a href="destiny.html" class="btn btn-outline">Bekijk Dashboard</a>
+      </div>
+    </div>
+  </div>
+  <footer><span>GuardianHQ</span> · Encrypted Relay System · Node Active · Not affiliated with Bungie, Inc.</footer>
+</div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+const app = initializeApp({apiKey:"AIzaSyDuXkAWvoEcihAtZAO4MF0jrWY96v5HzIM",authDomain:"guardian-hq.firebaseapp.com",projectId:"guardian-hq",storageBucket:"guardian-hq.firebasestorage.app",messagingSenderId:"588080926580",appId:"1:588080926580:web:2e92b539a9fd78e83be621"});
+const auth = getAuth(app);
+onAuthStateChanged(auth, user => {
+  if(user){document.getElementById('nav-login').style.display='none';document.getElementById('nav-profile').style.display='inline-flex';}
+});
+</script>
+</body>
+</html>
