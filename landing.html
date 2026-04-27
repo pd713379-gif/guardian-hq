@@ -11,7 +11,7 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      background: black; /* ruimte rondom afbeelding */
+      background: black;
       overflow: hidden;
     }
 
@@ -21,7 +21,8 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      object-fit: contain; /* 🔥 zorgt dat hele afbeelding zichtbaar blijft */
+      /* 'cover' zorgt dat het scherm altijd volledig gevuld is */
+      object-fit: cover; 
       object-position: center;
     }
   </style>
