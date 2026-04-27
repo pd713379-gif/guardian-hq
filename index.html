@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuardianHQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Rajdhani',sans-serif}
+    #canvas{position:fixed;inset:0;z-index:0}
+    .vignette{position:fixed;inset:0;z-index:1;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.85) 100%);pointer-events:none}
+    .scanline{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px)}
+    .h-line{position:fixed;left:0;right:0;height:1px;z-index:3;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(212,168,67,0.4),transparent);opacity:0;transition:opacity 0.5s}
+    .h-line.top{top:15%}.h-line.bottom{bottom:15%}.h-line.show{opacity:1}
+    .bracket{position:fixed;z-index:20;width:40px;height:40px;opacity:0;transition:opacity 0.8s}
+    .bracket::before,.bracket::after{content:'';position:absolute;background:#d4a843}
+    .bracket.tl{top:5%;left:5%}.bracket.tl::before{top:0;left:0;width:100%;height:2px}.bracket.tl::after{top:0;left:0;width:2px;height:100%}
+    .bracket.tr{top:5%;right:5%}.bracket.tr::before{top:0;right:0;width:100%;height:2px}.bracket.tr::after{top:0;right:0;width:2px;height:100%}
+    .bracket.bl{bottom:5%;left:5%}.bracket.bl::before{bottom:0;left:0;width:100%;height:2px}.bracket.bl::after{bottom:0;left:0;width:2px;height:100%}
+    .bracket.br{bottom:5%;right:5%}.bracket.br::before{bottom:0;right:0;width:100%;height:2px}.bracket.br::after{bottom:0;right:0;width:2px;height:100%}
+    .bracket.show{opacity:1}
+    .intro-wrap{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .center{position:relative;z-index:20;text-align:center;padding:2rem}
+    .logo-img{width:min(460px,80vw);opacity:0;transform:scale(0.88);transition:opacity 1.2s ease,transform 1.2s ease;border-radius:16px}
+    .logo-img.show{opacity:1;transform:scale(1)}
+    .logo-img.glitch{animation:glitch 0.3s steps(2) forwards}
+    @keyframes glitch{
+      0%{transform:scale(1) translateX(0)}
+      25%{transform:scale(1) translateX(-4px);filter:hue-rotate(90deg)}
+      50%{transform:scale(1) translateX(4px);filter:hue-rotate(-90deg)}
+      75%{transform:scale(1) translateX(-2px)}
+      100%{transform:scale(1) translateX(0);filter:none}
+    }
+    .tagline{margin-top:1.5rem;font-family:'Orbitron',monospace;font-size:clamp(0.65rem,2vw,0.9rem);font-weight:400;letter-spacing:8px;text-transform:uppercase;color:rgba(212,168,67,0.8);opacity:0;transform:translateY(10px);transition:opacity 0.8s,transform 0.8s}
+    .tagline.show{opacity:1;transform:translateY(0)}
+    .divider{width:0;height:1px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin:1.2rem auto;transition:width 1s ease}
+    .divider.show{width:300px}
+    .subtext{font-size:clamp(0.7rem,1.5vw,0.85rem);color:rgba(255,255,255,0.3);letter-spacing:4px;text-transform:uppercase;opacity:0;transition:opacity 0.8s 0.3s}
+    .subtext.show{opacity:1}
+    .load-wrap{margin-top:2.5rem;width:min(320px,70vw);opacity:0;transition:opacity 0.5s;margin-left:auto;margin-right:auto}
+    .load-wrap.show{opacity:1}
+    .load-label{display:flex;justify-content:space-between;font-size:0.7rem;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:6px}
+    .load-track{height:2px;background:rgba(255,255,255,0.08);border-radius:1px;overflow:hidden}
+    .load-fill{height:100%;width:0;background:linear-gradient(90deg,#d4a843,#f5c842);border-radius:1px}
+    .status-row{display:flex;gap:1.5rem;justify-content:center;margin-top:1rem;opacity:0;transition:opacity 0.5s}
+    .status-row.show{opacity:1}
+    .status-dot{display:flex;align-items:center;gap:6px;font-size:0.68rem;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase}
+    .dot{width:6px;height:6px;border-radius:50%;background:#4caf82;animation:dotpulse 1.5s infinite}
+    @keyframes dotpulse{0%,100%{opacity:1}50%{opacity:0.4}}
+    .skip-btn{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:100;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.55);padding:10px 32px;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;border-radius:4px}
+    .skip-btn:hover{background:rgba(255,255,255,0.13);color:#fff}
+    .flash{position:fixed;inset:0;z-index:50;background:#fff;opacity:0;pointer-events:none;transition:opacity 0.15s}
+    .flash.show{opacity:0.15}
+    .intro-wrap.fadeout{animation:fadeout 0.8s ease forwards}
+    @keyframes fadeout{to{opacity:0;transform:scale(1.04)}}
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="vignette"></div>
+<div class="scanline"></div>
+<div class="h-line top" id="hTop"></div>
+<div class="h-line bottom" id="hBot"></div>
+<div class="bracket tl" id="bTL"></div>
+<div class="bracket tr" id="bTR"></div>
+<div class="bracket bl" id="bBL"></div>
+<div class="bracket br" id="bBR"></div>
+<div class="flash" id="flash"></div>
+<div class="intro-wrap" id="introWrap">
+  <div class="center">
+    <div id="logoWrap" style="position:relative;display:inline-block;opacity:0;transform:scale(0.88);transition:opacity 1.2s ease,transform 1.2s ease">
+      <div style="position:absolute;inset:-40px;background:radial-gradient(ellipse at center,rgba(212,168,67,0.6) 0%,rgba(212,168,67,0.15) 50%,transparent 75%);border-radius:30px;z-index:0;pointer-events:none"></div>
+      <div style="position:absolute;inset:-15px;background:radial-gradient(ellipse at center,rgba(245,200,66,0.3) 0%,transparent 70%);border-radius:20px;z-index:0;pointer-events:none"></div>
+      <img src="https://i.imgur.com/2UZKNw5.png" alt="GuardianHQ" class="logo-img" id="logoImg" style="position:relative;z-index:1;filter:drop-shadow(0 0 25px rgba(212,168,67,0.8)) drop-shadow(0 0 60px rgba(212,168,67,0.4));opacity:1;transform:none;transition:none">
+    </div>
+    <div class="tagline" id="tagline">Destiny 2 Command Center</div>
+    <div class="divider" id="divider"></div>
+    <div class="subtext" id="subtext">Become Legend</div>
+    <div class="load-wrap" id="loadWrap">
+      <div class="load-label">
+        <span id="loadText">Initialiseren</span>
+        <span id="loadPct">0%</span>
+      </div>
+      <div class="load-track"><div class="load-fill" id="loadFill"></div></div>
+    </div>
+    <div class="status-row" id="statusRow">
+      <div class="status-dot"><div class="dot"></div>Servers Online</div>
+      <div class="status-dot"><div class="dot"></div>482K Guardians</div>
+      <div class="status-dot"><div class="dot"></div>Live Feed</div>
+    </div>
+  </div>
+</div>
+<button class="skip-btn" onclick="skipIntro()">Skip ▶</button>
+<script>
+const DEST = 'landing.html';
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight});
+const particles = Array.from({length:100},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.2+0.2,vx:(Math.random()-0.5)*0.15,vy:(Math.random()-0.5)*0.15,a:Math.random()}));
+function drawParticles(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(212,168,67,${p.a*0.5})`;ctx.fill()});requestAnimationFrame(drawParticles)}
+drawParticles();
+let done=false;
+function skipIntro(){if(done)return;done=true;flashAndGo()}
+function flashAndGo(){const f=document.getElementById('flash');f.classList.add('show');setTimeout(()=>f.classList.remove('show'),150);setTimeout(()=>{document.getElementById('introWrap').classList.add('fadeout');setTimeout(()=>window.location.href=DEST,800)},200)}
+let currentPct=0;
+function animateLoad(target,duration,cb){const start=Date.now(),from=currentPct;function tick(){const t=Math.min((Date.now()-start)/duration,1),val=Math.round(from+(target-from)*t);document.getElementById('loadFill').style.width=val+'%';document.getElementById('loadPct').textContent=val+'%';currentPct=val;if(t<1)requestAnimationFrame(tick);else if(cb)cb()}tick()}
+const steps=[{pct:15,text:'Verbinding maken...'},{pct:35,text:'Bungie API ophalen...'},{pct:55,text:'Guardian data laden...'},{pct:75,text:'Wapens synchroniseren...'},{pct:90,text:'Command Center gereed...'},{pct:100,text:'Welkom, Guardian'}];
+setTimeout(()=>{document.getElementById('hTop').classList.add('show');document.getElementById('hBot').classList.add('show');['bTL','bTR','bBL','bBR'].forEach(id=>document.getElementById(id).classList.add('show'))},300);
+setTimeout(()=>{const w=document.getElementById('logoWrap');w.style.opacity='1';w.style.transform='scale(1)'},600);
+setTimeout(()=>{document.getElementById('logoImg').classList.add('glitch');setTimeout(()=>document.getElementById('logoImg').classList.remove('glitch'),300)},1400);
+setTimeout(()=>{document.getElementById('tagline').classList.add('show');document.getElementById('divider').classList.add('show')},1800);
+setTimeout(()=>document.getElementById('subtext').classList.add('show'),2400);
+setTimeout(()=>{document.getElementById('loadWrap').classList.add('show');document.getElementById('statusRow').classList.add('show')},3000);
+setTimeout(()=>{let i=0;function next(){if(done||i>=steps.length)return;const s=steps[i++];document.getElementById('loadText').textContent=s.text;animateLoad(s.pct,i===steps.length?800:500,()=>{if(i<steps.length)setTimeout(next,300);else setTimeout(()=>{if(!done){done=true;flashAndGo()}},1000)})}next()},3400);
+</script>
+</body>
+</html>
+
